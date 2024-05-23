@@ -3,6 +3,7 @@
 #include <type_traits>
 #include <tuple>
 #include <string_view>
+#include <coroutine>
 
 #include "lost_lands.hpp"
 #include "component.hpp"
@@ -12,6 +13,7 @@
 #include "forged_concepts.hpp"
 #include "executor.hpp"
 #include "event.hpp"
+#include "scheduler.hpp"
 
 using namespace forged_in_lost_lands_ecs;
 
@@ -29,6 +31,16 @@ struct Position : public Component
 {
     float x, y;
 };
+
+generator<WaitAmountOfSeconds> generate_numbers(int i)
+{
+    std::cout << "generate_numbers starting" << std::endl;
+    co_yield WaitAmountOfSeconds{
+        .seconds = 10000.0f};
+    std::cout << "generate_numbers ending" << std::endl;
+
+    std::println("i: {}", i);
+}
 
 void t(Query<Position &> query, Query<Velocity &> query1)
 {
@@ -149,7 +161,16 @@ int main()
     // create variable based on args types
     // create_variable(std::declval<f_args_types>());
 
-   
-
     // std::cout << "Function name: " << (FUNCTION_TRAITS(check_collision)) << std::endl;
+
+    
+    TaskScheduler scheduler{generate_numbers, 10};
+
+    while (true)
+    {
+        scheduler.execute(0.016f);
+        /* code */
+    }
+
+    return 0;
 }
