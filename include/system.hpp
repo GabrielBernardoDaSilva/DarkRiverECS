@@ -23,7 +23,7 @@ namespace forged_in_lost_lands_ecs
         virtual void execute() = 0;
     };
 
-    // Define Executor Manager
+
     template <typename... Args>
     class Executor : public ExecutorBase
     {

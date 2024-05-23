@@ -29,6 +29,8 @@ namespace forged_in_lost_lands_ecs
         LostLands() = default;
         ~LostLands() = default;
 
+        /// archetypes
+
         template <req_component... T>
         Entity add_entity(T... components)
         {
@@ -134,18 +136,8 @@ namespace forged_in_lost_lands_ecs
             }
         }
 
-        void remove_entity(Entity entity)
-        {
-            auto entity_founded = std::ranges::find_if(entities, [&](Entity &e)
-                                                       { return e.id == entity.id; });
-            if (entity_founded != entities.end())
-            {
-                std::size_t archetype_location = entity_founded->location;
-                Archetype &archetype = archetypes[archetype_location];
-                archetype.remove_entity(*entity_founded);
-                entities.erase(entity_founded);
-            }
-        }
+        void remove_entity(Entity entity);
+
         /// archetypes end
 
         /// systems
@@ -162,36 +154,17 @@ namespace forged_in_lost_lands_ecs
             executor_manager.add_executor(system, create_archetype_ref());
         }
 
-        void run()
-        {
-            executor_manager.execute();
-        }
-
-        std::vector<Archetype *> create_archetype_ref()
-        {
-            std::vector<Archetype *> archetypes_ptr{};
-            for (auto &archetype : archetypes)
-            {
-                archetypes_ptr.push_back(&archetype);
-            }
-            return archetypes_ptr;
-        }
-
         template <validation_query_types... T>
         Query<T...> query()
         {
             return Query<T...>{create_archetype_ref()};
         }
 
-        void show_archetypes()
-        {
-            std::println("--------------------Archetypes-------------------");
-            for (auto &archetype : archetypes)
-            {
-                archetype.list_all_components_hash();
-            }
-            std::println("------------------------------------------------");
-        }
+        void run();
+
+        ///
+        std::vector<Archetype *> create_archetype_ref();
+        void show_archetypes() const;
     };
 }
 
