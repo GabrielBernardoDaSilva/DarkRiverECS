@@ -21,6 +21,11 @@ struct Health : public Component
     int health;
 };
 
+struct Position : public Component
+{
+    float x, y;
+};
+
 void t(Query<Position &> query, Query<Velocity &> query1)
 {
     auto a = query.all();

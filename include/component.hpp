@@ -17,11 +17,6 @@ namespace forged_in_lost_lands_ecs
     {
     };
 
-    struct Position : public Component
-    {
-        float x, y;
-    };
-
     class ComponentList
     {
     private:
