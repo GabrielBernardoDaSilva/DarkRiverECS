@@ -1,6 +1,9 @@
 #include <iostream>
 #include <print>
+#include <type_traits>
 #include <tuple>
+#include <string_view>
+
 #include "lost_lands.hpp"
 #include "component.hpp"
 #include "archetype.hpp"
@@ -8,6 +11,7 @@
 #include "system.hpp"
 #include "forged_concepts.hpp"
 #include "executor.hpp"
+#include "event.hpp"
 
 using namespace forged_in_lost_lands_ecs;
 
@@ -41,6 +45,16 @@ void t(Query<Position &> query, Query<Velocity &> query1)
         std::println("Velocity: x: {} y: {}", vel.x, vel.y);
         vel.x += 1.0f;
     }
+}
+
+struct Collision : public Event
+{
+    bool collided;
+};
+
+void check_collision(Collision collision)
+{
+    std::println("Collision: {}", collision.collided);
 }
 
 int main()
@@ -124,8 +138,18 @@ int main()
     // manager.execute();
 
     lands.add_executor(&t);
+    // lands.emit(Collision{.collided = true});
+
+    lands.subscribe<Collision>(check_collision);
+    lands.emit(Collision{.collided = true});
+    lands.unsubscribe<Collision>(check_collision);
+
     lands.run();
 
     // create variable based on args types
     // create_variable(std::declval<f_args_types>());
+
+   
+
+    // std::cout << "Function name: " << (FUNCTION_TRAITS(check_collision)) << std::endl;
 }

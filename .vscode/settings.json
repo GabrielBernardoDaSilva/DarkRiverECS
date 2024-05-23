@@ -72,6 +72,7 @@
         "ratio": "cpp",
         "stop_token": "cpp",
         "thread": "cpp",
-        "any": "cpp"
+        "any": "cpp",
+        "unordered_set": "cpp"
     }
 }

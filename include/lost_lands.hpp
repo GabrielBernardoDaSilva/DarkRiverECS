@@ -7,6 +7,10 @@
 #include <print>
 #include <expected>
 #include <functional>
+#include <iostream>
+#include <type_traits>
+#include <tuple>
+#include <string_view>
 
 #include "archetype.hpp"
 #include "system.hpp"
@@ -14,6 +18,7 @@
 #include "errors.hpp"
 #include "util.hpp"
 #include "system.hpp"
+#include "event.hpp"
 
 namespace forged_in_lost_lands_ecs
 {
@@ -24,6 +29,7 @@ namespace forged_in_lost_lands_ecs
         std::vector<Entity> entities{};
         std::size_t entity_count{};
         ExecutorManager executor_manager{};
+        EventManager event_manager{};
 
     public:
         LostLands() = default;
@@ -163,6 +169,41 @@ namespace forged_in_lost_lands_ecs
         void run();
 
         ///
+
+        /// events
+
+        template <req_event_ty Ev>
+        void emit(Ev event)
+        {
+            event_manager.emit(event);
+        }
+
+        template <req_event_ty Ev>
+        void subscribe(std::function<void(Ev)> subscriber)
+        {
+            std::cout << "Function name: " << (FUNCTION_TRAITS(subscriber)) << std::endl;
+            event_manager.subscribe<Ev>(subscriber);
+        }
+
+        template <req_event_ty Ev>
+        void subscribe(void (*subscriber)(Ev))
+        {
+            std::cout << "Function name: " << (FUNCTION_TRAITS_NAME(subscriber)) << std::endl;
+            event_manager.subscribe<Ev>(subscriber);
+        }
+
+        template <req_event_ty Ev>
+        void unsubscribe(std::function<void(Ev)> subscriber)
+        {
+            event_manager.unsubscribe<Ev>(subscriber);
+        }
+
+        template <req_event_ty Ev>
+        void unsubscribe(void (*subscriber)(Ev))
+        {
+            event_manager.unsubscribe<Ev>(subscriber);
+        }
+
         std::vector<Archetype *> create_archetype_ref();
         void show_archetypes() const;
     };

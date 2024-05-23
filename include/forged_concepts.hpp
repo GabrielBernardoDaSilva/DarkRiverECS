@@ -4,15 +4,21 @@
 #include <iostream>
 #include <functional>
 
-#include "component.hpp"
-
 namespace forged_in_lost_lands_ecs
 {
+#define FUNCTION_TRAITS(func) function_traits<decltype(&func)>(), #func
+#define FUNCTION_TRAITS_NAME(func) #func
+    class Component;
+    class Event;
+
     template <typename T>
     concept req_component = std::is_base_of<Component, T>::value;
 
     template <typename T>
     concept validation_query_types = std::is_reference_v<T> && std::is_base_of_v<Component, std::remove_reference_t<T>>;
+
+    template <typename T>
+    concept req_event_ty = std::is_base_of<Event, T>::value;
 
     template <typename T>
     struct function_traits;
@@ -51,6 +57,9 @@ namespace forged_in_lost_lands_ecs
 
     template <typename T>
     using function_argument_types = typename function_traits<T>::argument_types;
+
+    template <typename Func>
+    struct function_traits_helper;
 
     template <typename T>
     void print_type()
