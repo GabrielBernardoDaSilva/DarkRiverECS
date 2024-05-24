@@ -110,39 +110,7 @@ int main()
         .x = 13.0f,
         .y = 23.0f};
 
-    // Archetype archetype(entity, pos, vel);
-    // archetype.add_entity(entity2, pos2, vel2);
-
-    // Archetype archetype2(entity3, pos3);
-
-    // auto has_pos = archetype.has_component<Position>();
-
-    ////auto res = archetype.remove_component<Velocity>(entity);
-    ////if (res.has_value()) {
-    ////	std::println("Removed Position");
-    ////	archetype2.migrate_entity_to_itself(std::move(res.value()));
-    ////}
-    ////archetype.add_components<Position, Velocity>(pos, vel);
-    // std::vector<Archetype*> archetypes = { &archetype, &archetype2 };
-    //{
-    //	Query<Position&> query{ archetypes };
-    //	auto a = query.all();
-    //	for (auto& [pos] : a) {
-    //		std::println("Position: x: {} y: {}", pos.x, pos.y);
-    //		pos.x += 1.0f;
-
-    //	}
-    //}
-    // archetype.list_all_components_hash();
-    //{
-    //	Query<Position&, Velocity&> query{ archetypes };
-    //	auto a = query.all();
-    //	for (auto& [pos, vel] : a) {
-    //		std::println("Position: x: {} y: {}", pos.x, pos.y);
-    //		std::println("Velocity: x: {} y: {}", vel.x, vel.y);
-    //		pos.x += 1.0f;
-    //	}
-    //}
+  
 
     LostLands lands;
     Entity e = lands.add_entity(pos, vel);
@@ -153,57 +121,30 @@ int main()
     lands.remove_component_from_entity<Health>(e);
     lands.show_archetypes();
 
-    // auto query = lands.query<Entity &, Position &>();
+  
 
-    // auto& s1 = lands.create_system();
-    // s1.add_query<Entity &, Position &>();
-    // auto q1 = s1.get_query<Entity &, Position &>();
-    // system.set_executor(ExecutorType::SETUP);
-
-    using f_types = function_traits<decltype(&t)>;
-    using f_return_types = f_types::return_type;
-    using f_args_types = f_types::argument_types;
-    print_tuple_types<f_args_types>();
-
-    // Executor manager{
-    //     &t, lands.create_archetype_ref()};
-    // manager.execute();
 
     lands.add_executor(t);
     lands.add_executor(read_position);
-    // lands.emit(Collision{.collided = true});
+   
 
     lands.run();
     lands.emit(Collision{.collided = true});
 
-    // create variable based on args types
-    // create_variable(std::declval<f_args_types>());
-
-    // std::cout << "Function name: " << (FUNCTION_TRAITS(check_collision)) << std::endl;
-
-    // TaskScheduler scheduler{generate_numbers, 10};
-
-    // TaskManager task_manager;
-    // auto id = task_manager.add_task({generate_numbers, 10});
+    
 
     lands.add_task(generate_numbers, 10);
 
     lands.add_plugin<PluginTest>();
     lands.build_plugins();
 
-    // task_manager.stop_task(id);
-    // task_manager.resume_task(id);
-    // task_manager.remove_task(id);
+ 
 
     while (true)
     {
 
         lands.run_tasks(0.16f);
-        // lands.run_tasks(0.16f)
-        // task_manager.execute_all(0.16f);
-        // task_manager.remove_all_tasks_is_done();
-        // scheduler.execute(0.16f);
-        /* code */
+        
     }
 
     return 0;
