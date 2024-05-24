@@ -54,7 +54,7 @@ void check_collision(Collision collision)
     std::println("Collision: {}", collision.collided);
 }
 
-void t(Query<With<Position &, Velocity &>> query, Query<With<Position &>, Without<Velocity &>> q2, EventManager &event_manager, EntityManager &entity_manager)
+void modifing_pos(Query<With<Position &, Velocity &>> query, Query<With<Position &>, Without<Velocity &>> q2, EventManager &event_manager, EntityManager &entity_manager)
 {
     entity_manager.add_entity(Position{.x = 100.0f, .y = 100.0f}, Velocity{.x = 100.0f, .y = 100.0f});
     event_manager.subscribe<Collision>(check_collision);
@@ -123,7 +123,7 @@ int main()
     lands.remove_component_from_entity<Health>(e);
     lands.show_archetypes();
 
-    lands.add_executor(t);
+    lands.add_executor(modifing_pos);
     lands.add_executor(read_position);
 
     lands.run();
