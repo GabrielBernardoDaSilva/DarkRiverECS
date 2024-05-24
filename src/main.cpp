@@ -54,8 +54,9 @@ void check_collision(Collision collision)
     std::println("Collision: {}", collision.collided);
 }
 
-void t(Query<Position &> query, EventManager &event_manager, Query<Velocity &> query1, EntityManager& entity_manager )
+void t(Query<Position &> query, EventManager &event_manager, Query<Velocity &> query1, EntityManager &entity_manager)
 {
+    entity_manager.add_entity(Position{.x = 100.0f, .y = 100.0f}, Velocity{.x = 100.0f, .y = 100.0f});
     event_manager.subscribe<Collision>(check_collision);
     auto a = query.all();
     auto b = query1.all();
@@ -70,6 +71,7 @@ void t(Query<Position &> query, EventManager &event_manager, Query<Velocity &> q
         std::println("Velocity: x: {} y: {}", vel.x, vel.y);
         vel.x += 1.0f;
     }
+
 }
 
 class PluginTest : public Plugin
