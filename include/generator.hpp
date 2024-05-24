@@ -28,13 +28,45 @@ namespace forged_in_lost_lands_ecs
 
             void return_void()
             {
-                        }
+            }
         };
         generator(promise_type *p)
             : m_handle(std::coroutine_handle<promise_type>::from_promise(*p)) {}
+
+        // copy constructor
+        generator(const generator &other) : m_handle(other.m_handle)
+        {
+        }
+
+        generator &operator=(const generator &other)
+        {
+            m_handle = other.m_handle;
+            return *this;
+        }
+
+        // move constructor
+
+        generator(generator &&rhs) noexcept
+            : m_handle(rhs.m_handle)
+        {
+            rhs.m_handle = nullptr;
+        }
+
+        // assignment operator
+        generator &operator=(generator &&rhs) noexcept
+        {
+            if (this != &rhs)
+            {
+                m_handle = rhs.m_handle;
+                rhs.m_handle = nullptr;
+            }
+            return *this;
+        }
+
         ~generator()
         {
-            m_handle.destroy();
+            if (m_handle)
+                m_handle.destroy();
         }
 
         T operator()()

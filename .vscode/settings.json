@@ -74,6 +74,7 @@
         "thread": "cpp",
         "any": "cpp",
         "unordered_set": "cpp",
-        "coroutine": "cpp"
+        "coroutine": "cpp",
+        "set": "cpp"
     }
 }

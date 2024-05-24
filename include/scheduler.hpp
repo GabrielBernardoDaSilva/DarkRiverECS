@@ -7,6 +7,9 @@
 #include <algorithm>
 #include <ranges>
 #include <expected>
+#include <optional>
+#include <map>
+#include <vector>
 
 #include "generator.hpp"
 #include "errors.hpp"
@@ -33,29 +36,41 @@ namespace forged_in_lost_lands_ecs
             is_running = true;
         }
 
-        void execute(float dt)
+        // move constructor
+        TaskScheduler(TaskScheduler &&other) noexcept
+        {
+            task_gen = std::move(other.task_gen);
+            is_running = other.is_running;
+            amount_of_seconds_to_wait = other.amount_of_seconds_to_wait;
+            is_done = other.is_done;
+        }
+
+        bool execute(float dt)
         {
             if (is_running)
             {
 
                 is_running = true;
-                bool task_result = task_gen.m_handle.done();
+                bool task_result = task_gen.value().m_handle.done();
                 if (task_result)
                 {
                     std::println("Task is done");
                     is_running = false;
                     is_done = true;
-                    return;
+                    return is_done;
                 }
-                if (amount_of_seconds_to_wait <= 0.0f){
+                if (amount_of_seconds_to_wait <= 0.0f)
+                {
                     std::println("Task is not done");
-                    amount_of_seconds_to_wait = task_gen().seconds;
+                    amount_of_seconds_to_wait = task_gen.value()().seconds;
                 }
                 else if (amount_of_seconds_to_wait > 0.0f)
                 {
                     amount_of_seconds_to_wait -= dt;
                 }
             }
+
+            return is_done;
         }
 
         bool task_is_done()
@@ -73,7 +88,7 @@ namespace forged_in_lost_lands_ecs
         bool is_running = false;
         float amount_of_seconds_to_wait = 0.0f;
         bool is_done = false;
-        generator<WaitAmountOfSeconds> task_gen;
+        std::optional<generator<WaitAmountOfSeconds>> task_gen;
     };
 
     class TaskId
@@ -111,25 +126,28 @@ namespace forged_in_lost_lands_ecs
             return *this;
         }
 
-        [[nodiscard]] TaskId add_task(TaskScheduler task)
+        TaskId add_task(TaskScheduler &&task)
         {
-            tasks.push_back(task);
+            tasks.insert({task_id, std::move(task)});
             return TaskId{task_id++};
         }
 
         void execute_all(float dt)
         {
-            for (auto &task : tasks)
-                task.execute(dt);
+            for (auto &[id, task] : tasks)
+            {
+                if (task.execute(dt))
+                    tasks_to_remove.push_back(id);
+            }
         }
 
         std::expected<Success, SchedulerError> stop_task(TaskId id)
         {
-            auto task = std::ranges::find_if(tasks, [&](TaskScheduler &task)
-                                             { return task_id == id.id; });
+            auto task = tasks.find(id.id);
             if (task != tasks.end())
             {
-                task->set_running(false);
+                std::println("Task is stopped");
+                task->second.set_running(false);
                 return Success{};
             }
             return std::unexpected(SchedulerError::TASK_NOT_FOUND);
@@ -137,11 +155,10 @@ namespace forged_in_lost_lands_ecs
 
         std::expected<Success, SchedulerError> resume_task(TaskId id)
         {
-            auto task = std::ranges::find_if(tasks, [&](TaskScheduler &task)
-                                             { return task_id == id.id; });
+            auto task = tasks.find(id.id);
             if (task != tasks.end())
             {
-                task->set_running(true);
+                task->second.set_running(true);
                 return Success{};
             }
             return std::unexpected(SchedulerError::TASK_NOT_FOUND);
@@ -149,8 +166,7 @@ namespace forged_in_lost_lands_ecs
 
         std::expected<Success, SchedulerError> remove_task(TaskId id)
         {
-            auto task = std::ranges::find_if(tasks, [&](TaskScheduler &task)
-                                             { return task_id == id.id; });
+            auto task = tasks.find(id.id);
             if (task != tasks.end())
             {
                 tasks.erase(task);
@@ -161,34 +177,33 @@ namespace forged_in_lost_lands_ecs
 
         void stop_all_tasks()
         {
-            std::ranges::for_each(tasks, [](TaskScheduler &task)
-                                  { task.set_running(false); });
+            for (auto &[_, task] : tasks)
+                task.set_running(false);
         }
 
         void resume_all_tasks()
         {
-            std::ranges::for_each(tasks, [](TaskScheduler &task)
-                                  { task.set_running(true); });
+            for (auto &[_, task] : tasks)
+                task.set_running(true);
         }
 
         void remove_all_tasks_is_done()
         {
-            bool is_done = false;
-            while (!is_done)
+            for (std::size_t id : tasks_to_remove)
             {
+                std::println("Removing all tasks that are done");
 
-                auto res = std::ranges::remove_if(tasks, [](TaskScheduler &task)
-                                                  { return task.task_is_done(); });
-                if (res.begin() != tasks.end())
-                    tasks.erase(res.begin(), res.end());
-                else
-                    is_done = true;
+                remove_task(TaskId{id});
             }
+
+            if (!tasks_to_remove.empty())
+                tasks_to_remove.clear();
         }
 
     private:
-        std::vector<TaskScheduler>
-            tasks{};
+    
+        std::map<std::size_t, TaskScheduler> tasks{};
         std::size_t task_id{0};
+        std::vector<std::size_t> tasks_to_remove{};
     };
 }

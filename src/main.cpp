@@ -163,18 +163,24 @@ int main()
 
     // std::cout << "Function name: " << (FUNCTION_TRAITS(check_collision)) << std::endl;
 
+    // TaskScheduler scheduler{generate_numbers, 10};
 
-    TaskScheduler scheduler{generate_numbers, 10};
+    // TaskManager task_manager;
+    // auto id = task_manager.add_task({generate_numbers, 10});
 
-    TaskManager task_manager;
-    // auto id = task_manager.add_task(scheduler);
+    lands.add_task(generate_numbers, 10);
 
-    // lands.add_task(generate_numbers, 10);
+    // task_manager.stop_task(id);
+    // task_manager.resume_task(id);
+    // task_manager.remove_task(id);
 
     while (true)
     {
+
+        lands.run_tasks(0.16f);
         // lands.run_tasks(0.16f)
-        task_manager.execute_all(0.16f);
+        // task_manager.execute_all(0.16f);
+        // task_manager.remove_all_tasks_is_done();
         // scheduler.execute(0.16f);
         /* code */
     }

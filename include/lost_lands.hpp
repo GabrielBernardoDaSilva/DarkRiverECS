@@ -218,19 +218,17 @@ namespace forged_in_lost_lands_ecs
         //
 
         // tasks
-        // template <typename... Args>
-        // TaskId add_task(std::function<generator<WaitAmountOfSeconds>(Args...)> task, Args... args)
-        // {
-        //     TaskScheduler scheduler{task, args...};
-        //     return task_manager.add_task(scheduler);
-        // }
+        template <typename... Args>
+        TaskId add_task(std::function<generator<WaitAmountOfSeconds>(Args...)> task, Args... args)
+        {
+            return task_manager.add_task({task, args...});
+        }
 
-        // template <typename... Args>
-        // TaskId add_task(generator<WaitAmountOfSeconds> (*task)(Args...), Args... args)
-        // {
-        //     TaskScheduler scheduler{task, args...};
-        //     return task_manager.add_task(scheduler);
-        // }
+        template <typename... Args>
+        TaskId add_task(generator<WaitAmountOfSeconds> (*task)(Args...), Args... args)
+        {
+            return task_manager.add_task({task, args...});
+        }
 
         void run_tasks(float dt)
         {
