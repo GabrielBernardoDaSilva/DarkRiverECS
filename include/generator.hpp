@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream>
+#include <exception>
 #include <coroutine>
 #include <cassert>
 

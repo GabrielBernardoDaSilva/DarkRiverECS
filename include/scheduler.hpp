@@ -1,5 +1,8 @@
 #pragma once
 
+#include "generator.hpp"
+#include "errors.hpp"
+
 #include <coroutine>
 #include <functional>
 #include <print>
@@ -10,9 +13,6 @@
 #include <optional>
 #include <map>
 #include <vector>
-
-#include "generator.hpp"
-#include "errors.hpp"
 
 namespace forged_in_lost_lands_ecs
 {
@@ -37,52 +37,13 @@ namespace forged_in_lost_lands_ecs
         }
 
         // move constructor
-        TaskScheduler(TaskScheduler &&other) noexcept
-        {
-            task_gen = std::move(other.task_gen);
-            is_running = other.is_running;
-            amount_of_seconds_to_wait = other.amount_of_seconds_to_wait;
-            is_done = other.is_done;
-        }
+        TaskScheduler(TaskScheduler &&other) noexcept;
 
-        bool execute(float dt)
-        {
-            if (is_running)
-            {
+        bool execute(float dt);
 
-                is_running = true;
-                bool task_result = task_gen.value().m_handle.done();
-                if (task_result)
-                {
-                    std::println("Task is done");
-                    is_running = false;
-                    is_done = true;
-                    return is_done;
-                }
-                if (amount_of_seconds_to_wait <= 0.0f)
-                {
-                    std::println("Task is not done");
-                    amount_of_seconds_to_wait = task_gen.value()().seconds;
-                }
-                else if (amount_of_seconds_to_wait > 0.0f)
-                {
-                    amount_of_seconds_to_wait -= dt;
-                }
-            }
+        bool task_is_done();
 
-            return is_done;
-        }
-
-        bool task_is_done()
-        {
-            return is_done;
-        }
-
-        void set_running(bool running)
-        {
-            if (!is_done)
-                is_running = running;
-        }
+        void set_running(bool running);
 
     private:
         bool is_running = false;
@@ -113,95 +74,31 @@ namespace forged_in_lost_lands_ecs
         TaskManager &operator=(const TaskManager &) = delete;
 
         // move constructor
-        TaskManager(TaskManager &&other) noexcept
-        {
-            tasks = std::move(other.tasks);
-        }
+        TaskManager(TaskManager &&other) noexcept;
 
         // move assignment
-        TaskManager &operator=(TaskManager &&other) noexcept
-        {
-            if (this != &other)
-                tasks = std::move(other.tasks);
-            return *this;
-        }
+        TaskManager &operator=(TaskManager &&other) noexcept;
 
-        TaskId add_task(TaskScheduler &&task)
-        {
-            tasks.insert({task_id, std::move(task)});
-            return TaskId{task_id++};
-        }
+        TaskId add_task(TaskScheduler &&task);
 
-        void execute_all(float dt)
-        {
-            for (auto &[id, task] : tasks)
-            {
-                if (task.execute(dt))
-                    tasks_to_remove.push_back(id);
-            }
-        }
+        void execute_all(float dt);
 
-        std::expected<Success, SchedulerError> stop_task(TaskId id)
-        {
-            auto task = tasks.find(id.id);
-            if (task != tasks.end())
-            {
-                std::println("Task is stopped");
-                task->second.set_running(false);
-                return Success{};
-            }
-            return std::unexpected(SchedulerError::TASK_NOT_FOUND);
-        }
+        std::expected<Success, SchedulerError> stop_task(TaskId id);
 
-        std::expected<Success, SchedulerError> resume_task(TaskId id)
-        {
-            auto task = tasks.find(id.id);
-            if (task != tasks.end())
-            {
-                task->second.set_running(true);
-                return Success{};
-            }
-            return std::unexpected(SchedulerError::TASK_NOT_FOUND);
-        }
+        std::expected<Success, SchedulerError> resume_task(TaskId id);
 
-        std::expected<Success, SchedulerError> remove_task(TaskId id)
-        {
-            auto task = tasks.find(id.id);
-            if (task != tasks.end())
-            {
-                tasks.erase(task);
-                return Success{};
-            }
-            return std::unexpected(SchedulerError::TASK_NOT_FOUND);
-        }
+        std::expected<Success, SchedulerError> remove_task(TaskId id);
 
-        void stop_all_tasks()
-        {
-            for (auto &[_, task] : tasks)
-                task.set_running(false);
-        }
+        void stop_all_tasks();
 
-        void resume_all_tasks()
-        {
-            for (auto &[_, task] : tasks)
-                task.set_running(true);
-        }
+        void resume_all_tasks();
 
-        void remove_all_tasks_is_done()
-        {
-            for (std::size_t id : tasks_to_remove)
-            {
-                std::println("Removing all tasks that are done");
-
-                remove_task(TaskId{id});
-            }
-
-            if (!tasks_to_remove.empty())
-                tasks_to_remove.clear();
-        }
+        void remove_all_tasks_is_done();
+        
+           
+        
 
     private:
-    
         std::map<std::size_t, TaskScheduler> tasks{};
         std::size_t task_id{0};
         std::vector<std::size_t> tasks_to_remove{};

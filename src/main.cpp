@@ -37,10 +37,11 @@ generator<WaitAmountOfSeconds> generate_numbers(int i)
 {
     std::cout << "generate_numbers starting" << std::endl;
     co_yield WaitAmountOfSeconds{
-        .seconds = 10000.0f};
+        .seconds = 100000.0f};
     std::cout << "generate_numbers ending" << std::endl;
 
     std::println("i: {}", i);
+    std::exit(0);
 }
 
 void t(Query<Position &> query, Query<Velocity &> query1)

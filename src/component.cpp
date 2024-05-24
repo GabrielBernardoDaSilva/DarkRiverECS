@@ -1,5 +1,7 @@
 #include "component.hpp"
 
+#include <memory>
+
 namespace forged_in_lost_lands_ecs
 {
 

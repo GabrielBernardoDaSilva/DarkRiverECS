@@ -1,19 +1,16 @@
 #pragma once
+#include "component.hpp"
+#include "util.hpp"
+
 #include <cstddef>
 #include <vector>
 #include <map>
-#include <concepts>
 #include <memory>
-#include <format>
-#include <ranges>
 #include <expected>
 #include <print>
 #include <string>
 #include <ranges>
 #include <algorithm>
-
-#include "component.hpp"
-#include "util.hpp"
 
 namespace forged_in_lost_lands_ecs
 {

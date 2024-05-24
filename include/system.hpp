@@ -1,5 +1,4 @@
-#ifndef FORGED_IN_LOST_LANDS_ECS_SYSTEM_H
-#define FORGED_IN_LOST_LANDS_ECS_SYSTEM_H
+#pragma once
 
 #include <unordered_map>
 #include <vector>
@@ -76,4 +75,3 @@ namespace forged_in_lost_lands_ecs
     };
 }
 
-#endif // FORGED_IN_LOST_LANDS_ECS_SYSTEM_H

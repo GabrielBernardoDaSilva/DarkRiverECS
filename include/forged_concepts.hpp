@@ -1,7 +1,7 @@
 #pragma once
 #include <concepts>
 #include <type_traits>
-#include <iostream>
+#include <print>
 #include <functional>
 
 namespace forged_in_lost_lands_ecs
@@ -68,7 +68,7 @@ namespace forged_in_lost_lands_ecs
     template <typename T>
     void print_type()
     {
-        std::cout << typeid(T).name() << std::endl;
+        std::println("{}", typeid(T).name());
     }
 
     template <typename Tuple, std::size_t... Is>

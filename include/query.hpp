@@ -1,13 +1,13 @@
 #pragma once
-#include <vector>
-#include <tuple>
-#include <ranges>
-#include <algorithm>
-
 #include "archetype.hpp"
 #include "util.hpp"
 #include "component.hpp"
 #include "forged_concepts.hpp"
+
+#include <vector>
+#include <tuple>
+#include <ranges>
+#include <algorithm>
 
 namespace forged_in_lost_lands_ecs
 {

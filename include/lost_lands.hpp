@@ -1,16 +1,4 @@
-#ifndef LOST_LANDS_HPP
-#define LOST_LANDS_HPP
-#include <vector>
-#include <memory>
-#include <cstddef>
-#include <ranges>
-#include <print>
-#include <expected>
-#include <functional>
-#include <iostream>
-#include <type_traits>
-#include <tuple>
-#include <string_view>
+#pragma once
 
 #include "archetype.hpp"
 #include "system.hpp"
@@ -22,6 +10,17 @@
 #include "plugin.hpp"
 #include "scheduler.hpp"
 #include "generator.hpp"
+
+#include <vector>
+#include <memory>
+#include <cstddef>
+#include <ranges>
+#include <print>
+#include <expected>
+#include <functional>
+#include <type_traits>
+#include <tuple>
+#include <string_view>
 
 namespace forged_in_lost_lands_ecs
 {
@@ -186,14 +185,12 @@ namespace forged_in_lost_lands_ecs
         template <req_event_ty Ev>
         void subscribe(std::function<void(Ev)> subscriber)
         {
-            std::cout << "Function name: " << (FUNCTION_TRAITS(subscriber)) << std::endl;
             event_manager.subscribe<Ev>(subscriber);
         }
 
         template <req_event_ty Ev>
         void subscribe(void (*subscriber)(Ev))
         {
-            std::cout << "Function name: " << (FUNCTION_TRAITS_NAME(subscriber)) << std::endl;
             event_manager.subscribe<Ev>(subscriber);
         }
 
@@ -272,5 +269,3 @@ namespace forged_in_lost_lands_ecs
         void show_archetypes() const;
     };
 }
-
-#endif // LOST_LANDS_HPP
