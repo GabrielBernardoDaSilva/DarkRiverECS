@@ -71,7 +71,14 @@ void t(Query<Position &> query, EventManager &event_manager, Query<Velocity &> q
         std::println("Velocity: x: {} y: {}", vel.x, vel.y);
         vel.x += 1.0f;
     }
+}
 
+void read_position(Query<const Position &> query)
+{
+    for (auto &[pos] : query.all())
+    {
+        std::println("Position: x: {} y: {}", pos.x, pos.y);
+    }
 }
 
 class PluginTest : public Plugin
@@ -163,6 +170,7 @@ int main()
     // manager.execute();
 
     lands.add_executor(t);
+    lands.add_executor(read_position);
     // lands.emit(Collision{.collided = true});
 
     lands.run();

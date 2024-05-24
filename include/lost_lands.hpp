@@ -43,10 +43,7 @@ namespace forged_in_lost_lands_ecs
 
         /// archetypes
 
-        EntityManager &get_entity_manager()
-        {
-            return entity_manager;
-        }
+        EntityManager &get_entity_manager();
 
         template <req_component... T>
         Entity add_entity(T... components)
@@ -91,12 +88,9 @@ namespace forged_in_lost_lands_ecs
             return Query<T...>{create_archetype_ref()};
         }
 
-        ExecutorManager &get_executor_manager()
-        {
-            return executor_manager;
-        }
+        ExecutorManager &get_executor_manager();
 
-        void run();
+        void run() noexcept;
 
         ///
 
@@ -132,10 +126,7 @@ namespace forged_in_lost_lands_ecs
             event_manager.unsubscribe<Ev>(subscriber);
         }
 
-        EventManager &get_event_manager()
-        {
-            return event_manager;
-        }
+        EventManager &get_event_manager();
 
         // plugins
         template <req_plugin T>
@@ -144,13 +135,8 @@ namespace forged_in_lost_lands_ecs
             plugins.push_back(std::make_unique<T>());
         }
 
-        void build_plugins()
-        {
-            for (auto &plugin : plugins)
-            {
-                plugin->build(*this);
-            }
-        }
+        void build_plugins();
+
         //
 
         // tasks
@@ -166,40 +152,19 @@ namespace forged_in_lost_lands_ecs
             return task_manager.add_task({task, args...});
         }
 
-        void run_tasks(float dt)
-        {
-            task_manager.execute_all(dt);
-        }
+        void run_tasks(float dt);
 
-        void resume_task(TaskId id)
-        {
-            task_manager.resume_task(id);
-        }
+        void resume_task(TaskId id);
 
-        void stop_task(TaskId id)
-        {
-            task_manager.stop_task(id);
-        }
+        void stop_task(TaskId id);
 
-        void remove_task(TaskId id)
-        {
-            task_manager.remove_task(id);
-        }
+        void remove_task(TaskId id);
 
-        void stop_all_tasks()
-        {
-            task_manager.stop_all_tasks();
-        }
+        void stop_all_tasks();
 
-        void resume_all_tasks()
-        {
-            task_manager.resume_all_tasks();
-        }
+        void resume_all_tasks();
 
-        TaskManager &get_task_manager()
-        {
-            return task_manager;
-        }
+        TaskManager &get_task_manager();
 
         std::vector<Archetype *> create_archetype_ref();
         void show_archetypes() const;

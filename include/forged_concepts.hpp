@@ -12,6 +12,12 @@ namespace forged_in_lost_lands_ecs
     class Event;
     class Plugin;
 
+    class QueryBase;
+    class EntityManager;
+    class EventManager;
+    class TaskManager;
+    class ExecutorManager;
+
     template <typename T>
     concept req_component = std::is_base_of<Component, T>::value;
 
@@ -24,6 +30,12 @@ namespace forged_in_lost_lands_ecs
     template <typename T>
     concept req_plugin = std::is_base_of<Plugin, T>::value;
 
+    template <typename T>
+    concept req_system_args = requires { std::is_base_of_v<QueryBase, T> ||
+                                             std::is_same_v<EntityManager, std::remove_reference_t<T>> ||
+                                             std::is_same_v<EventManager, std::remove_reference_t<T>> ||
+                                             std::is_same_v<TaskManager, std::remove_reference_t<T>> ||
+                                             std::is_same_v<ExecutorManager, std::remove_reference_t<T>>; };
     template <typename T>
     struct function_traits;
 

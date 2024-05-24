@@ -30,7 +30,7 @@ namespace forged_in_lost_lands_ecs
         virtual void execute() = 0;
     };
 
-    template <typename... Args>
+    template <req_system_args... Args>
     class Executor : public ExecutorBase
     {
     public:
@@ -77,16 +77,19 @@ namespace forged_in_lost_lands_ecs
                 return static_cast<Arg>(accessor.get_executor_manager());
             else if constexpr (is_entity_manager)
                 return static_cast<Arg>(accessor.get_entity_manager());
-            else
-            {
-                throw std::invalid_argument("Invalid argument type");
-            }
+            throw std::invalid_argument("Invalid argument type");
         }
 
         void execute() override
         {
-            (print_argument<Args>(), ...);
-            executor(get_argument<Args>()...);
+            try
+            {
+                executor(get_argument<Args>()...);
+            }
+            catch (const std::invalid_argument e)
+            {
+                throw e;
+            }
         }
 
     private:

@@ -1,15 +1,74 @@
 #include "lost_lands.hpp"
+#include <exception>
+#include <iostream>
 
 namespace forged_in_lost_lands_ecs
 {
+    EntityManager &LostLands::get_entity_manager()
+    {
+        return entity_manager;
+    }
+
     void LostLands::remove_entity(Entity entity)
     {
         entity_manager.remove_entity(entity);
     }
 
-    void LostLands::run()
+    ExecutorManager &LostLands::get_executor_manager()
     {
-        executor_manager.execute();
+        return executor_manager;
+    }
+
+    void LostLands::run() noexcept
+    {
+        try
+        {
+            executor_manager.execute();
+        }
+        catch (const std::invalid_argument e)
+        {
+            std::cerr << e.what() << '\n';
+            std::exit(1);
+        }
+    }
+    EventManager &LostLands::get_event_manager()
+    {
+        return event_manager;
+    }
+    void LostLands::build_plugins()
+    {
+        for (auto &plugin : plugins)
+        {
+            plugin->build(*this);
+        }
+    }
+    void LostLands::run_tasks(float dt)
+    {
+        task_manager.execute_all(dt);
+    }
+    void LostLands::resume_task(TaskId id)
+    {
+        task_manager.resume_task(id);
+    }
+    void LostLands::stop_task(TaskId id)
+    {
+        task_manager.stop_task(id);
+    }
+    void LostLands::remove_task(TaskId id)
+    {
+        task_manager.remove_task(id);
+    }
+    void LostLands::stop_all_tasks()
+    {
+        task_manager.stop_all_tasks();
+    }
+    void LostLands::resume_all_tasks()
+    {
+        task_manager.resume_all_tasks();
+    }
+    TaskManager &LostLands::get_task_manager()
+    {
+        return task_manager;
     }
     std::vector<Archetype *> LostLands::create_archetype_ref()
     {
