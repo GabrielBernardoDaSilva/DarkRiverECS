@@ -68,7 +68,7 @@ namespace forged_in_lost_lands_ecs
             constexpr bool is_executor_manager = std::is_same_v<ExecutorManager, std::remove_reference_t<Arg>>;
             constexpr bool is_entity_manager = std::is_same_v<EntityManager, std::remove_reference_t<Arg>>;
             if constexpr (is_base_query)
-                return Arg{accessor.get_archetypes()};
+                return Arg{accessor};
             else if constexpr (is_event_manager)
                 return static_cast<Arg>(accessor.get_event_manager());
             else if constexpr (is_task_manager)

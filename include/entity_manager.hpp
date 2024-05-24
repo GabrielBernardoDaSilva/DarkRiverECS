@@ -2,12 +2,15 @@
 #include "forged_concepts.hpp"
 #include "archetype.hpp"
 
+#include <cstddef>
+
 namespace forged_in_lost_lands_ecs
 {
     class LostLands;
     class EntityManager
     {
         friend class LostLands;
+
     public:
         EntityManager() = default;
         ~EntityManager() = default;
@@ -115,6 +118,11 @@ namespace forged_in_lost_lands_ecs
                     std::println("Created new archetype: {}", entity.location);
                 }
             }
+        }
+
+        std::size_t get_archetype_size() const
+        {
+            return archetypes.size();
         }
 
         void remove_entity(Entity entity);

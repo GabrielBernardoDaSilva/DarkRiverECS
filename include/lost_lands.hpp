@@ -85,7 +85,7 @@ namespace forged_in_lost_lands_ecs
         template <validation_query_types... T>
         Query<T...> query()
         {
-            return Query<T...>{create_archetype_ref()};
+            return Query<T...>{accessor};
         }
 
         ExecutorManager &get_executor_manager();

@@ -3,6 +3,7 @@
 #include "util.hpp"
 #include "component.hpp"
 #include "forged_concepts.hpp"
+#include "accessor.hpp"
 
 #include <vector>
 #include <tuple>
@@ -23,8 +24,8 @@ namespace forged_in_lost_lands_ecs
 	class Query : public QueryBase
 	{
 	public:
-		Query(std::vector<Archetype *> archetypes) : archetypes(archetypes) {
-													 };
+		Query(Accessor &accessor) : accessor(accessor) {
+									};
 		~Query() = default;
 
 		template <typename... U>
@@ -67,26 +68,33 @@ namespace forged_in_lost_lands_ecs
 
 		inline constexpr const std::tuple<T...> &first()
 		{
+			if (archetypes.size() != accessor.get_archetype_size())
+				archetypes = accessor.get_archetypes();
 			execute();
 			return result.front();
 		}
 
 		inline constexpr const std::tuple<T...> &last()
 		{
+			if (archetypes.size() != accessor.get_archetype_size())
+				archetypes = accessor.get_archetypes();
 			execute();
 			return result.back();
 		}
 
 		inline constexpr const std::vector<std::tuple<T...>> &all()
 		{
+			if (archetypes.size() != accessor.get_archetype_size())
+				archetypes = accessor.get_archetypes();
 			execute();
 			return result;
 		}
 
 	private:
-		std::vector<Archetype *> archetypes;
+		std::vector<Archetype *> archetypes{};
 		std::vector<std::size_t> with_components = {get_hashed_id(typeid(T).name())...};
-		std::vector<std::size_t> without_components;
-		std::vector<std::tuple<T...>> result;
+		std::vector<std::size_t> without_components{};
+		std::vector<std::tuple<T...>> result{};
+		Accessor &accessor;
 	};
 }

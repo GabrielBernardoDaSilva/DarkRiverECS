@@ -9,6 +9,11 @@ namespace forged_in_lost_lands_ecs
         return lost_land.create_archetype_ref();
     }
 
+    std::size_t Accessor::get_archetype_size()
+    {
+        return lost_land.get_entity_manager().get_archetype_size();
+    }
+
     EventManager &Accessor::get_event_manager()
     {
         return lost_land.get_event_manager();
@@ -27,5 +32,9 @@ namespace forged_in_lost_lands_ecs
     EntityManager &Accessor::get_entity_manager()
     {
         return lost_land.get_entity_manager();
+    }
+    LostLands &Accessor::get_lost_land()
+    {
+        return lost_land;
     }
 }
