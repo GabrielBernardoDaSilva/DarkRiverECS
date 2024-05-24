@@ -14,6 +14,7 @@
 #include "executor.hpp"
 #include "event.hpp"
 #include "scheduler.hpp"
+#include "plugin.hpp"
 
 using namespace forged_in_lost_lands_ecs;
 
@@ -68,6 +69,14 @@ void check_collision(Collision collision)
 {
     std::println("Collision: {}", collision.collided);
 }
+
+class PluginTest : public Plugin
+{
+    virtual void build(LostLands &lost_lands) override
+    {
+        std::println("PluginTest on_start");
+    }
+};
 
 int main()
 {
@@ -169,6 +178,9 @@ int main()
     // auto id = task_manager.add_task({generate_numbers, 10});
 
     lands.add_task(generate_numbers, 10);
+
+    lands.add_plugin<PluginTest>();
+    lands.build_plugins();
 
     // task_manager.stop_task(id);
     // task_manager.resume_task(id);

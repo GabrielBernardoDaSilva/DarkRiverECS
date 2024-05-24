@@ -211,9 +211,17 @@ namespace forged_in_lost_lands_ecs
 
         // plugins
         template <req_plugin T>
-        void add_plugin(T &&plugin)
+        void add_plugin()
         {
-            plugins.push_back(std::make_unique<T>(std::move(plugin)));
+            plugins.push_back(std::make_unique<T>());
+        }
+
+        void build_plugins()
+        {
+            for (auto &plugin : plugins)
+            {
+                plugin->build(*this);
+            }
         }
         //
 
