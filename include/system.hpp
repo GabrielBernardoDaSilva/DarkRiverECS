@@ -4,8 +4,6 @@
 #include "query.hpp"
 #include "forged_concepts.hpp"
 #include "accessor.hpp"
-#include "event.hpp"
-#include "scheduler.hpp"
 
 #include <unordered_map>
 #include <vector>
@@ -17,6 +15,11 @@
 
 namespace forged_in_lost_lands_ecs
 {
+    class QueryBase;
+    class EntityManager;
+    class EventManager;
+    class TaskManager;
+    class ExecutorManager;
 
     class ExecutorBase
     {
@@ -44,8 +47,15 @@ namespace forged_in_lost_lands_ecs
         {
             bool is_base_query = std::is_base_of<QueryBase, Arg>::value;
             bool is_event_manager = std::is_same_v<EventManager, std::remove_reference_t<Arg>>;
+            bool is_task_manager = std::is_same_v<TaskManager, std::remove_reference_t<Arg>>;
+            bool is_executor_manager = std::is_same_v<ExecutorManager, std::remove_reference_t<Arg>>;
+            bool is_entity_manager = std::is_same_v<EntityManager, std::remove_reference_t<Arg>>;
             std::println("is_base_query: {}", is_base_query);
             std::println("is_event_manager: {}", is_event_manager);
+            std::println("is_task_manager: {}", is_task_manager);
+            std::println("is_executor_manager: {}", is_executor_manager);
+            std::println("is_entity_manager: {}", is_entity_manager);
+
             std::println("type: {}", typeid(Arg).name());
         }
 
@@ -56,6 +66,7 @@ namespace forged_in_lost_lands_ecs
             constexpr bool is_event_manager = std::is_same_v<EventManager, std::remove_reference_t<Arg>>;
             constexpr bool is_task_manager = std::is_same_v<TaskManager, std::remove_reference_t<Arg>>;
             constexpr bool is_executor_manager = std::is_same_v<ExecutorManager, std::remove_reference_t<Arg>>;
+            constexpr bool is_entity_manager = std::is_same_v<EntityManager, std::remove_reference_t<Arg>>;
             if constexpr (is_base_query)
                 return Arg{accessor.get_archetypes()};
             else if constexpr (is_event_manager)
@@ -64,6 +75,8 @@ namespace forged_in_lost_lands_ecs
                 return static_cast<Arg>(accessor.get_task_manager());
             else if constexpr (is_executor_manager)
                 return static_cast<Arg>(accessor.get_executor_manager());
+            else if constexpr (is_entity_manager)
+                return static_cast<Arg>(accessor.get_entity_manager());
             else
             {
                 throw std::invalid_argument("Invalid argument type");
@@ -73,10 +86,6 @@ namespace forged_in_lost_lands_ecs
         void execute() override
         {
             (print_argument<Args>(), ...);
-            // use forwarding to pass the arguments to the function
-            // auto args = std::make_tuple(get_argument<Args>()...);
-            // executor(std::forward<Args>(accessor.get_archetypes())...);
-            // auto args = std::make_tuple(get_argument<Args>()...);
             executor(get_argument<Args>()...);
         }
 

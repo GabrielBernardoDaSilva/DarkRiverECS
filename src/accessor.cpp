@@ -1,6 +1,5 @@
 #include "accessor.hpp"
 
-#include "archetype.hpp"
 #include "lost_lands.hpp"
 
 namespace forged_in_lost_lands_ecs
@@ -23,5 +22,10 @@ namespace forged_in_lost_lands_ecs
     TaskManager &Accessor::get_task_manager()
     {
         return lost_land.get_task_manager();
+    }
+
+    EntityManager &Accessor::get_entity_manager()
+    {
+        return lost_land.get_entity_manager();
     }
 }

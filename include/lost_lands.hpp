@@ -11,6 +11,7 @@
 #include "scheduler.hpp"
 #include "generator.hpp"
 #include "accessor.hpp"
+#include "entity.hpp"
 
 #include <vector>
 #include <memory>
@@ -35,6 +36,7 @@ namespace forged_in_lost_lands_ecs
         ExecutorManager executor_manager{};
         EventManager event_manager{};
         TaskManager task_manager{};
+        EntityManager entity_manager{*this};
 
         Accessor accessor{*this};
 
@@ -43,6 +45,11 @@ namespace forged_in_lost_lands_ecs
         ~LostLands() = default;
 
         /// archetypes
+
+        EntityManager &get_entity_manager()
+        {
+            return entity_manager;
+        }
 
         template <req_component... T>
         Entity add_entity(T... components)

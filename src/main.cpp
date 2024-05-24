@@ -54,7 +54,7 @@ void check_collision(Collision collision)
     std::println("Collision: {}", collision.collided);
 }
 
-void t(Query<Position &> query, EventManager &event_manager, Query<Velocity &> query1 )
+void t(Query<Position &> query, EventManager &event_manager, Query<Velocity &> query1, EntityManager& entity_manager )
 {
     event_manager.subscribe<Collision>(check_collision);
     auto a = query.all();
