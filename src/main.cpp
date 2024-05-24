@@ -44,8 +44,19 @@ generator<WaitAmountOfSeconds> generate_numbers(int i)
     std::exit(0);
 }
 
-void t(Query<Position &> query, Query<Velocity &> query1)
+struct Collision : public Event
 {
+    bool collided;
+};
+
+void check_collision(Collision collision)
+{
+    std::println("Collision: {}", collision.collided);
+}
+
+void t(Query<Position &> query, EventManager &event_manager, Query<Velocity &> query1 )
+{
+    event_manager.subscribe<Collision>(check_collision);
     auto a = query.all();
     auto b = query1.all();
     for (auto &[pos] : a)
@@ -59,16 +70,6 @@ void t(Query<Position &> query, Query<Velocity &> query1)
         std::println("Velocity: x: {} y: {}", vel.x, vel.y);
         vel.x += 1.0f;
     }
-}
-
-struct Collision : public Event
-{
-    bool collided;
-};
-
-void check_collision(Collision collision)
-{
-    std::println("Collision: {}", collision.collided);
 }
 
 class PluginTest : public Plugin
@@ -162,11 +163,8 @@ int main()
     lands.add_executor(t);
     // lands.emit(Collision{.collided = true});
 
-    lands.subscribe<Collision>(check_collision);
-    lands.emit(Collision{.collided = true});
-    lands.unsubscribe<Collision>(check_collision);
-
     lands.run();
+    lands.emit(Collision{.collided = true});
 
     // create variable based on args types
     // create_variable(std::declval<f_args_types>());

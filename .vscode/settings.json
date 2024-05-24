@@ -75,6 +75,8 @@
         "any": "cpp",
         "unordered_set": "cpp",
         "coroutine": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "system_handler.hpp": "c",
+        "*.tpp": "c"
     }
 }

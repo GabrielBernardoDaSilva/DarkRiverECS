@@ -10,6 +10,7 @@
 #include "plugin.hpp"
 #include "scheduler.hpp"
 #include "generator.hpp"
+#include "accessor.hpp"
 
 #include <vector>
 #include <memory>
@@ -34,6 +35,8 @@ namespace forged_in_lost_lands_ecs
         ExecutorManager executor_manager{};
         EventManager event_manager{};
         TaskManager task_manager{};
+
+        Accessor accessor{*this};
 
     public:
         LostLands() = default;
@@ -155,19 +158,24 @@ namespace forged_in_lost_lands_ecs
         template <typename... Args>
         void add_executor(std::function<void(Args...)> system)
         {
-            executor_manager.add_executor(system, create_archetype_ref());
+            executor_manager.add_executor(system, accessor);
         }
 
         template <typename... Args>
         void add_executor(void (*system)(Args...))
         {
-            executor_manager.add_executor(system, create_archetype_ref());
+            executor_manager.add_executor(system, accessor);
         }
 
         template <validation_query_types... T>
         Query<T...> query()
         {
             return Query<T...>{create_archetype_ref()};
+        }
+
+        ExecutorManager &get_executor_manager()
+        {
+            return executor_manager;
         }
 
         void run();
@@ -204,6 +212,11 @@ namespace forged_in_lost_lands_ecs
         void unsubscribe(void (*subscriber)(Ev))
         {
             event_manager.unsubscribe<Ev>(subscriber);
+        }
+
+        EventManager &get_event_manager()
+        {
+            return event_manager;
         }
 
         // plugins
@@ -263,6 +276,11 @@ namespace forged_in_lost_lands_ecs
         void resume_all_tasks()
         {
             task_manager.resume_all_tasks();
+        }
+
+        TaskManager &get_task_manager()
+        {
+            return task_manager;
         }
 
         std::vector<Archetype *> create_archetype_ref();
