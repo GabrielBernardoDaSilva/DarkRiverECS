@@ -5,6 +5,7 @@
 #include "forged_concepts.hpp"
 #include "accessor.hpp"
 #include "event.hpp"
+#include "scheduler.hpp"
 
 #include <unordered_map>
 #include <vector>
@@ -53,10 +54,16 @@ namespace forged_in_lost_lands_ecs
         {
             constexpr bool is_base_query = std::is_base_of<QueryBase, Arg>::value;
             constexpr bool is_event_manager = std::is_same_v<EventManager, std::remove_reference_t<Arg>>;
-            if constexpr(is_base_query)
+            constexpr bool is_task_manager = std::is_same_v<TaskManager, std::remove_reference_t<Arg>>;
+            constexpr bool is_executor_manager = std::is_same_v<ExecutorManager, std::remove_reference_t<Arg>>;
+            if constexpr (is_base_query)
                 return Arg{accessor.get_archetypes()};
-            else if constexpr(is_event_manager)
+            else if constexpr (is_event_manager)
                 return static_cast<Arg>(accessor.get_event_manager());
+            else if constexpr (is_task_manager)
+                return static_cast<Arg>(accessor.get_task_manager());
+            else if constexpr (is_executor_manager)
+                return static_cast<Arg>(accessor.get_executor_manager());
             else
             {
                 throw std::invalid_argument("Invalid argument type");
