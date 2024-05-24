@@ -34,7 +34,6 @@ namespace forged_in_lost_lands_ecs
             : m_handle(std::coroutine_handle<promise_type>::from_promise(*p)) {}
         ~generator()
         {
-            std::cout << "Handle destroyed..." << std::endl;
             m_handle.destroy();
         }
 

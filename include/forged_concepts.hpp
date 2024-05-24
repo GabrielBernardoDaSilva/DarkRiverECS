@@ -10,6 +10,7 @@ namespace forged_in_lost_lands_ecs
 #define FUNCTION_TRAITS_NAME(func) #func
     class Component;
     class Event;
+    class Plugin;
 
     template <typename T>
     concept req_component = std::is_base_of<Component, T>::value;
@@ -19,6 +20,9 @@ namespace forged_in_lost_lands_ecs
 
     template <typename T>
     concept req_event_ty = std::is_base_of<Event, T>::value;
+
+    template <typename T>
+    concept req_plugin = std::is_base_of<Plugin, T>::value;
 
     template <typename T>
     struct function_traits;

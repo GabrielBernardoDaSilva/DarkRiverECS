@@ -149,7 +149,7 @@ int main()
     //     &t, lands.create_archetype_ref()};
     // manager.execute();
 
-    lands.add_executor(&t);
+    lands.add_executor(t);
     // lands.emit(Collision{.collided = true});
 
     lands.subscribe<Collision>(check_collision);
@@ -163,12 +163,19 @@ int main()
 
     // std::cout << "Function name: " << (FUNCTION_TRAITS(check_collision)) << std::endl;
 
-    
+
     TaskScheduler scheduler{generate_numbers, 10};
+
+    TaskManager task_manager;
+    // auto id = task_manager.add_task(scheduler);
+
+    // lands.add_task(generate_numbers, 10);
 
     while (true)
     {
-        scheduler.execute(0.016f);
+        // lands.run_tasks(0.16f)
+        task_manager.execute_all(0.16f);
+        // scheduler.execute(0.16f);
         /* code */
     }
 
