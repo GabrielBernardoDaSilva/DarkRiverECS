@@ -12,6 +12,17 @@
 
 namespace forged_in_lost_lands_ecs
 {
+
+	template <validation_query_types... T>
+	struct With
+	{
+	};
+
+	template <validation_query_types... T>
+	struct Without
+	{
+	};
+
 	class QueryBase
 	{
 	public:
@@ -20,19 +31,16 @@ namespace forged_in_lost_lands_ecs
 		virtual void execute() = 0;
 	};
 
-	template <validation_query_types... T>
-	class Query : public QueryBase
+	template <typename T, typename Without = Without<>>
+	class Query;
+
+	template <typename... T, typename... WithoutComponents>
+	class Query<With<T...>, Without<WithoutComponents...>> : public QueryBase
 	{
 	public:
 		Query(Accessor &accessor) : accessor(accessor) {
 									};
 		~Query() = default;
-
-		template <typename... U>
-		void without(U... components)
-		{
-			(without_components.push_back(get_hashed_id(typeid(U).name())), ...);
-		}
 
 		constexpr inline void execute() override
 		{
@@ -92,8 +100,8 @@ namespace forged_in_lost_lands_ecs
 
 	private:
 		std::vector<Archetype *> archetypes{};
-		std::vector<std::size_t> with_components = {get_hashed_id(typeid(T).name())...};
-		std::vector<std::size_t> without_components{};
+		std::vector<std::size_t> with_components{get_hashed_id(typeid(T).name())...};
+		std::vector<std::size_t> without_components{get_hashed_id(typeid(WithoutComponents).name())...};
 		std::vector<std::tuple<T...>> result{};
 		Accessor &accessor;
 	};
