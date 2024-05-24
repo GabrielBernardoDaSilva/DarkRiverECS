@@ -1,5 +1,5 @@
 # ForgedInLostLandsEcs
-![alt text](https://github.com/GabrielBernardoDaSilva/forged-in-lost-lands-ecs/blob/master/forged-in-lost-lands.png)
+![alt text](https://github.com/GabrielBernardoDaSilva/forged-in-lost-lands-ecs/blob/main/forged-in-lost-lands.png)
 
 ForgedInLostLandsEcs is an ECS (Entity-Component-System) library developed in C++23. It provides a powerful framework for building scalable and efficient game engines and simulations.
 
