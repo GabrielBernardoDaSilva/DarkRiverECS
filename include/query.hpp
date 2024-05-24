@@ -31,11 +31,11 @@ namespace forged_in_lost_lands_ecs
 		virtual void execute() = 0;
 	};
 
-	template <typename T, typename Without = Without<>>
+	template <typename WithComponent, typename Without = Without<>>
 	class Query;
 
-	template <typename... T, typename... WithoutComponents>
-	class Query<With<T...>, Without<WithoutComponents...>> : public QueryBase
+	template <typename... WithComponent, typename... WithoutComponents>
+	class Query<With<WithComponent...>, Without<WithoutComponents...>> : public QueryBase
 	{
 	public:
 		Query(Accessor &accessor) : accessor(accessor) {
@@ -62,11 +62,11 @@ namespace forged_in_lost_lands_ecs
 				{
 					for (std::size_t i = 0; i < entities.size(); i++)
 					{
-						if ((components.find(get_hashed_id(typeid(T).name())) != components.end() && ...))
+						if ((components.find(get_hashed_id(typeid(WithComponent).name())) != components.end() && ...))
 						{
-							auto component_tuple = std::tie(*static_cast<std::remove_reference_t<T> *>(
-								components[get_hashed_id(typeid(T).name())]->get_component(i).get())...);
-							std::tuple<T...> tuple = std::tuple<T...>{std::get<T>(component_tuple)...};
+							auto component_tuple = std::tie(*static_cast<std::remove_reference_t<WithComponent> *>(
+								components[get_hashed_id(typeid(WithComponent).name())]->get_component(i).get())...);
+							std::tuple<WithComponent...> tuple = std::tuple<WithComponent...>{std::get<WithComponent>(component_tuple)...};
 							result.push_back(tuple);
 						}
 					}
@@ -74,7 +74,7 @@ namespace forged_in_lost_lands_ecs
 			}
 		}
 
-		inline constexpr const std::tuple<T...> &first()
+		inline constexpr const std::tuple<WithComponent...> &first()
 		{
 			if (archetypes.size() != accessor.get_archetype_size())
 				archetypes = accessor.get_archetypes();
@@ -82,7 +82,7 @@ namespace forged_in_lost_lands_ecs
 			return result.front();
 		}
 
-		inline constexpr const std::tuple<T...> &last()
+		inline constexpr const std::tuple<WithComponent...> &last()
 		{
 			if (archetypes.size() != accessor.get_archetype_size())
 				archetypes = accessor.get_archetypes();
@@ -90,7 +90,7 @@ namespace forged_in_lost_lands_ecs
 			return result.back();
 		}
 
-		inline constexpr const std::vector<std::tuple<T...>> &all()
+		inline constexpr const std::vector<std::tuple<WithComponent...>> &all()
 		{
 			if (archetypes.size() != accessor.get_archetype_size())
 				archetypes = accessor.get_archetypes();
@@ -100,9 +100,9 @@ namespace forged_in_lost_lands_ecs
 
 	private:
 		std::vector<Archetype *> archetypes{};
-		std::vector<std::size_t> with_components{get_hashed_id(typeid(T).name())...};
+		std::vector<std::size_t> with_components{get_hashed_id(typeid(WithComponent).name())...};
 		std::vector<std::size_t> without_components{get_hashed_id(typeid(WithoutComponents).name())...};
-		std::vector<std::tuple<T...>> result{};
+		std::vector<std::tuple<WithComponent...>> result{};
 		Accessor &accessor;
 	};
 }
