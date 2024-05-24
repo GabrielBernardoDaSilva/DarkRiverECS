@@ -1,8 +1,8 @@
 # ForgedInLostLandsEcs
+
 ![alt text](https://github.com/GabrielBernardoDaSilva/forged_in_lost_lands_ecs/blob/main/forged-in-lost-lands.png)
 
 ForgedInLostLandsEcs is an ECS (Entity-Component-System) library developed in C++23. It provides a powerful framework for building scalable and efficient game engines and simulations.
-
 
 ## Features
 
@@ -14,116 +14,147 @@ ForgedInLostLandsEcs is an ECS (Entity-Component-System) library developed in C+
 - **Plugins**: Extend the functionality of the ECS with custom plugins.
 
 ## Requirements
-- C++23 Compiler(clang)
 
+- C++23 Compiler(clang)
 
 ## Example Usage
 
 ```cpp
-#include <iostream>
-#include <forged_in_lost_lands_ecs.hpp>
+#include <print>
+
+#include "forged_in_lost_lands_ecs.hpp"
 
 using namespace forged_in_lost_lands_ecs;
 
-// Define components
-struct Velocity : public Component {
+struct Velocity : public Component
+{
     float x, y;
 };
 
-struct Health : public Component {
+struct Health : public Component
+{
     int health;
 };
 
-struct Position : public Component {
+struct Position : public Component
+{
     float x, y;
 };
 
-// Define events
-struct Collision : public Event {
+generator<WaitAmountOfSeconds> generate_numbers(int i)
+{
+    std::println("generate_numbers starting");
+    co_yield WaitAmountOfSeconds{
+        .seconds = 100000.0f};
+    std::println("generate_numbers ending");
+
+    std::println("i: {}", i);
+    std::exit(0);
+}
+
+struct Collision : public Event
+{
     bool collided;
 };
 
-// Define system functions
-void check_collision(Query<Position&> query, EventManager& event_manager, Query<Velocity&> query1, EntityManager& entity_manager) {
-    // Add entities
+void check_collision(Collision collision)
+{
+    std::println("Collision: {}", collision.collided);
+}
+
+void modifing_pos(Query<With<Position &, Velocity &>> query, Query<With<Position &>, Without<Velocity &>> q2, EventManager &event_manager, EntityManager &entity_manager)
+{
     entity_manager.add_entity(Position{.x = 100.0f, .y = 100.0f}, Velocity{.x = 100.0f, .y = 100.0f});
-    
-    // Subscribe to events
-    event_manager.subscribe<Collision>([](Collision collision) {
-        std::cout << "Collision: " << collision.collided << std::endl;
-    });
-    
-    // Process entities
+    event_manager.subscribe<Collision>(check_collision);
     auto a = query.all();
-    auto b = query1.all();
-    for (auto& [pos] : a) {
-        std::cout << "Position: x: " << pos.x << " y: " << pos.y << std::endl;
+    auto b = q2.all();
+    for (auto &[pos, vel] : a)
+    {
+        std::println("Position: x: {} y: {}", pos.x, pos.y);
         pos.x += 1.0f;
     }
 
-    for (auto& [vel] : b) {
-        std::cout << "Velocity: x: " << vel.x << " y: " << vel.y << std::endl;
-        vel.x += 1.0f;
+    for (auto &[pos] : b)
+    {
+
+        std::println("Pos Health: x: {} y: {}", pos.x, pos.y);
+        pos.x += 1.0f;
     }
 }
 
-void read_position(Query<const Position&> query) {
-    for (auto& [pos] : query.all()) {
-        std::cout << "Position: x: " << pos.x << " y: " << pos.y << std::endl;
+void read_position(Query<With<Position &>> query)
+{
+    for (auto &[pos] : query.all())
+    {
+        std::println("Position: x: {} y: {}", pos.x, pos.y);
     }
 }
 
-// Define a plugin
-class PluginTest : public Plugin {
-    virtual void build(LostLands& lost_lands) override {
-        std::cout << "PluginTest on_start" << std::endl;
+class PluginTest : public Plugin
+{
+    virtual void build(LostLands &lost_lands) override
+    {
+        std::println("PluginTest on_start");
     }
 };
 
-int main() {
+int main()
+{
+    Position pos = {
+        .x = 10.0f,
+        .y = 20.0f};
+    Velocity vel = {
+        .x = 5.0f,
+        .y = 5.0f};
+
+    Position pos2 = {
+        .x = 12.0f,
+        .y = 22.0f};
+
+    Velocity vel2 = {
+        .x = 7.0f,
+        .y = 7.0f};
+
+    Position pos3 = {
+        .x = 13.0f,
+        .y = 23.0f};
+    Health health = {
+        .health = 100};
+
     LostLands lands;
-    
-    // Add entities
-    Position pos = {.x = 10.0f, .y = 20.0f};
-    Velocity vel = {.x = 5.0f, .y = 5.0f};
     Entity e = lands.add_entity(pos, vel);
-    
-    // Add components to entities
+    Entity e2 = lands.add_entity(pos2, vel2);
+    Entity e3 = lands.add_entity(pos3, health);
+
     lands.add_component_to_entity(e, Health{.health = 100});
-    
-    // Add system functions
-    lands.add_executor(check_collision);
+    lands.show_archetypes();
+    lands.remove_component_from_entity<Health>(e);
+    lands.show_archetypes();
+
+    lands.add_executor(modifing_pos);
     lands.add_executor(read_position);
-    
-    // Run the ECS
+
     lands.run();
-    
-    // Emit an event
     lands.emit(Collision{.collided = true});
-    
-    // Add a task
-    lands.add_task([](int i) {
-        std::cout << "Task executed with argument: " << i << std::endl;
-    }, 10);
-    
-    // Add a plugin
+
+    lands.add_task(generate_numbers, 10);
+
     lands.add_plugin<PluginTest>();
-    
-    // Build plugins
     lands.build_plugins();
-    
-    // Main loop
-    while (true) {
+
+    while (true)
+    {
+
         lands.run_tasks(0.16f);
     }
-    
+
     return 0;
 }
-```
 
+```
 
 This README provides an overview of the library's features, example usage, requirements, installation instructions, and licensing information. Adjustments can be made as needed based on the specific details of the library.
 
-
 ## License
+
 Forged in Lost Lands is licensed under the MIT License. See LICENSE for details.

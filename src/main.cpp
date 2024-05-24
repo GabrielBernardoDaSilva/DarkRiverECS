@@ -1,20 +1,7 @@
-#include <iostream>
-#include <print>
-#include <type_traits>
-#include <tuple>
-#include <string_view>
-#include <coroutine>
 
-#include "lost_lands.hpp"
-#include "component.hpp"
-#include "archetype.hpp"
-#include "query.hpp"
-#include "system.hpp"
-#include "forged_concepts.hpp"
-#include "executor.hpp"
-#include "event.hpp"
-#include "scheduler.hpp"
-#include "plugin.hpp"
+#include <print>
+
+#include "forged_in_lost_lands_ecs.hpp"
 
 using namespace forged_in_lost_lands_ecs;
 
@@ -35,10 +22,10 @@ struct Position : public Component
 
 generator<WaitAmountOfSeconds> generate_numbers(int i)
 {
-    std::cout << "generate_numbers starting" << std::endl;
+    std::println("generate_numbers starting");
     co_yield WaitAmountOfSeconds{
         .seconds = 100000.0f};
-    std::cout << "generate_numbers ending" << std::endl;
+    std::println("generate_numbers ending");
 
     std::println("i: {}", i);
     std::exit(0);
