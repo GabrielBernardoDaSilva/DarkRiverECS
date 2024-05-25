@@ -127,9 +127,7 @@ int main()
     Entity e3 = lands.add_entity(pos3, health);
 
     lands.add_component_to_entity(e, Health{.health = 100});
-    lands.show_archetypes();
     lands.remove_component_from_entity<Health>(e);
-    lands.show_archetypes();
 
     lands.add_executor(modifing_pos);
     lands.add_executor(read_position);
