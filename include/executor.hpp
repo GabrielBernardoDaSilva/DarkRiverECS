@@ -7,9 +7,9 @@ namespace forged_in_lost_lands_ecs
 {
 	enum class ExecutorType
 	{
-		SETUP,
-		UPDATE,
-		END
+		Startup,
+		Update,
+		End
 	};
 
 }

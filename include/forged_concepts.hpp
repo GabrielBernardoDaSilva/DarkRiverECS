@@ -36,6 +36,11 @@ namespace forged_in_lost_lands_ecs
                                              std::is_same_v<EventManager, std::remove_reference_t<T>> ||
                                              std::is_same_v<TaskManager, std::remove_reference_t<T>> ||
                                              std::is_same_v<ExecutorManager, std::remove_reference_t<T>>; };
+
+    template <typename T>
+    concept function_pointer = std::is_function_v<std::remove_pointer_t<T>>;
+
+
     template <typename T>
     struct function_traits;
 

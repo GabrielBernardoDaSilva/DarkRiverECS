@@ -23,7 +23,9 @@ namespace forged_in_lost_lands_ecs
     {
         try
         {
+            executor_manager.startup_executor();
             executor_manager.execute();
+            executor_manager.shutdown_executor();
         }
         catch (const std::invalid_argument e)
         {

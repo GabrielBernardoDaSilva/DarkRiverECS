@@ -108,20 +108,24 @@ namespace forged_in_lost_lands_ecs
         ~ExecutorManager() = default;
 
         template <typename... Args>
-        void add_executor(std::function<void(Args...)> func, Accessor &accessor)
+        void add_executor(ExecutorType executor_type, std::function<void(Args...)> func, Accessor &accessor)
         {
-            executors.push_back(std::make_unique<Executor<Args...>>(func, accessor));
+            executors[executor_type].push_back(std::make_unique<Executor<Args...>>(func, accessor));
         }
 
         template <typename... Args>
-        void add_executor(void (*func)(Args...), Accessor &accessor)
+        void add_executor(ExecutorType executor_type, void (*func)(Args...), Accessor &accessor)
         {
-            executors.push_back(std::make_unique<Executor<Args...>>(func, accessor));
+            executors[executor_type].push_back(std::make_unique<Executor<Args...>>(func, accessor));
         }
+
+        void startup_executor();
 
         void execute();
 
+        void shutdown_executor();
+
     private:
-        std::vector<std::unique_ptr<ExecutorBase>> executors;
+        std::unordered_map<ExecutorType, std::vector<std::unique_ptr<ExecutorBase>>> executors{};
     };
 }

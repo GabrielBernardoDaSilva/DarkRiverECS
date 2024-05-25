@@ -110,8 +110,12 @@ int main()
     lands.remove_component_from_entity<Health>(e);
     lands.show_archetypes();
 
-    lands.add_executor(modifing_pos);
-    lands.add_executor(read_position);
+    // lands.add_executor(ExecutorType::Startup, modifing_pos);
+    // lands.add_executor(ExecutorType::Startup, read_position);
+
+    auto &a = modifing_pos;
+
+    lands.add_executors(ExecutorType::Startup, modifing_pos, read_position);
 
     lands.run();
     lands.emit(Collision{.collided = true});

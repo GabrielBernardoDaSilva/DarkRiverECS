@@ -26,6 +26,7 @@
 
 namespace forged_in_lost_lands_ecs
 {
+
     class LostLands
     {
     private:
@@ -71,15 +72,21 @@ namespace forged_in_lost_lands_ecs
         /// systems
 
         template <typename... Args>
-        void add_executor(std::function<void(Args...)> system)
+        void add_executor(ExecutorType executor_type, std::function<void(Args...)> system)
         {
-            executor_manager.add_executor(system, accessor);
+            executor_manager.add_executor(executor_type, system, accessor);
         }
 
         template <typename... Args>
-        void add_executor(void (*system)(Args...))
+        void add_executor(ExecutorType executor_type, void (*system)(Args...))
         {
-            executor_manager.add_executor(system, accessor);
+            executor_manager.add_executor(executor_type, system, accessor);
+        }
+
+        template <function_pointer... Executors>
+        void add_executors(ExecutorType execute_type, Executors... executors)
+        {
+            (add_executor(execute_type, executors), ...);
         }
 
         template <validation_query_types... T>
