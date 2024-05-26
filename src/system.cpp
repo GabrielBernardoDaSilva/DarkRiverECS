@@ -1,5 +1,5 @@
 #include "system.hpp"
-#include "lost_lands.hpp"
+#include "world.hpp"
 
 #include <iostream>
 #include <exception>

@@ -4,7 +4,7 @@
 
 namespace forged_in_lost_lands_ecs
 {
-    class LostLands;
+    class World;
 
     class Archetype;
     class EventManager;
@@ -15,7 +15,7 @@ namespace forged_in_lost_lands_ecs
     class Accessor
     {
     public:
-        Accessor(LostLands &lost_land) : lost_land(lost_land) {}
+        Accessor(World &lost_land) : lost_land(lost_land) {}
 
         std::vector<Archetype *> get_archetypes();
         std::size_t get_archetype_size();
@@ -24,9 +24,9 @@ namespace forged_in_lost_lands_ecs
         ExecutorManager &get_executor_manager();
         TaskManager &get_task_manager();
         EntityManager &get_entity_manager();
-        LostLands &get_lost_land();
+        World &get_lost_land();
 
     private:
-        LostLands &lost_land;
+        World &lost_land;
     };
 }

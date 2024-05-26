@@ -26,7 +26,7 @@
 namespace forged_in_lost_lands_ecs
 {
 
-    class LostLands
+    class World
     {
     private:
         std::vector<std::unique_ptr<Plugin>> plugins{};
@@ -38,8 +38,8 @@ namespace forged_in_lost_lands_ecs
         Accessor accessor{*this};
 
     public:
-        LostLands() = default;
-        ~LostLands() = default;
+        World() = default;
+        ~World() = default;
 
         /// archetypes
 

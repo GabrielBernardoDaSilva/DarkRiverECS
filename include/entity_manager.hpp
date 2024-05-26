@@ -8,10 +8,10 @@
 
 namespace forged_in_lost_lands_ecs
 {
-    class LostLands;
+    class World;
     class EntityManager
     {
-        friend class LostLands;
+        friend class World;
 
     public:
         EntityManager() = default;

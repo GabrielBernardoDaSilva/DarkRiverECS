@@ -1,6 +1,6 @@
 #include "accessor.hpp"
 
-#include "lost_lands.hpp"
+#include "world.hpp"
 
 namespace forged_in_lost_lands_ecs
 {
@@ -33,7 +33,7 @@ namespace forged_in_lost_lands_ecs
     {
         return lost_land.get_entity_manager();
     }
-    LostLands &Accessor::get_lost_land()
+    World &Accessor::get_lost_land()
     {
         return lost_land;
     }

@@ -2,13 +2,13 @@
 
 namespace forged_in_lost_lands_ecs
 {
-    class LostLands;
+    class World;
     class Plugin
     {
     public:
         Plugin() = default;
         virtual ~Plugin() = default;
 
-        virtual void build(LostLands &lost_land) = 0;
+        virtual void build(World &lost_land) = 0;
     };
 }

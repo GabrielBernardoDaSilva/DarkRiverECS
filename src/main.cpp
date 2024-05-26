@@ -72,7 +72,7 @@ void read_position(Query<With<Position &>> query)
 
 class PluginTest : public Plugin
 {
-    virtual void build(LostLands &lost_lands) override
+    virtual void build(World &lost_lands) override
     {
         std::println("PluginTest on_start");
     }
@@ -105,7 +105,7 @@ int main()
     Health health = {
         .health = 100};
 
-    LostLands lands;
+    World lands;
     Entity e = lands.add_entity(pos, vel);
     Entity e2 = lands.add_entity(pos2, vel2);
     Entity e3 = lands.add_entity(pos3, health);
