@@ -1,6 +1,5 @@
 #pragma once
 #include "archetype.hpp"
-#include "util.hpp"
 #include "component.hpp"
 #include "forged_concepts.hpp"
 #include "accessor.hpp"
@@ -62,13 +61,13 @@ namespace forged_in_lost_lands_ecs
 				{
 					for (std::size_t i = 0; i < entities.size(); i++)
 					{
-						if ((components.find(get_hashed_id(typeid(WithComponent).name())) != components.end() && ...))
-						{
-							auto component_tuple = std::tie(*static_cast<std::remove_reference_t<WithComponent> *>(
-								components[get_hashed_id(typeid(WithComponent).name())]->get_component(i).get())...);
-							std::tuple<WithComponent...> tuple = std::tuple<WithComponent...>{std::get<WithComponent>(component_tuple)...};
-							result.push_back(tuple);
-						}
+						if (((components.find(typeid(WithComponent).hash_code())) != components.end() && ...))
+							{
+								auto component_tuple = std::tie(*static_cast<std::remove_reference_t<WithComponent> *>(
+									components[typeid(WithComponent).hash_code()]->get_component(i).get())...);
+								std::tuple<WithComponent...> tuple = std::tuple<WithComponent...>{std::get<WithComponent>(component_tuple)...};
+								result.push_back(tuple);
+							}
 					}
 				}
 			}
@@ -104,8 +103,8 @@ namespace forged_in_lost_lands_ecs
 
 	private:
 		std::vector<Archetype *> archetypes{};
-		std::vector<std::size_t> with_components{get_hashed_id(typeid(WithComponent).name())...};
-		std::vector<std::size_t> without_components{get_hashed_id(typeid(WithoutComponents).name())...};
+		std::vector<std::size_t> with_components{typeid(WithComponent).hash_code()...};
+		std::vector<std::size_t> without_components{typeid(WithoutComponents).hash_code()...};
 		std::vector<std::tuple<WithComponent...>> result{};
 		Accessor &accessor;
 	};

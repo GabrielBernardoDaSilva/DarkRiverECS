@@ -4,7 +4,6 @@
 #include "system.hpp"
 #include "forged_concepts.hpp"
 #include "errors.hpp"
-#include "util.hpp"
 #include "system.hpp"
 #include "event.hpp"
 #include "plugin.hpp"

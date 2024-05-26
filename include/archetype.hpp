@@ -1,6 +1,7 @@
 #pragma once
 #include "component.hpp"
-#include "util.hpp"
+#include "errors.hpp"
+
 
 #include <cstddef>
 #include <vector>
@@ -33,8 +34,7 @@ namespace forged_in_lost_lands_ecs
 		template <class T>
 		void add_component(T component)
 		{
-			const char *type = typeid(T).name();
-			const std::size_t hash = get_hashed_id(type);
+			const std::size_t hash = typeid(T).hash_code();
 			if (components.find(hash) != components.end())
 			{
 				std::unique_ptr<Component> comp = std::make_unique<T>(component);
@@ -42,7 +42,7 @@ namespace forged_in_lost_lands_ecs
 				return;
 			}
 			// append name
-			name.append(type);
+			name.append(typeid(T).name());
 
 			std::unique_ptr<ComponentList> list = std::make_unique<ComponentList>();
 			std::unique_ptr<Component> comp = std::make_unique<T>(component);
@@ -73,8 +73,7 @@ namespace forged_in_lost_lands_ecs
 		template <class U>
 		bool has_component()
 		{
-			const char *type = typeid(U).name();
-			const std::size_t hash = get_hashed_id(type);
+			const std::size_t hash = typeid(U).hash_code();
 			return components.find(hash) != components.end();
 		}
 
@@ -96,8 +95,7 @@ namespace forged_in_lost_lands_ecs
 		template <class U>
 		std::expected<std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component>>>, ArchetypeError> remove_component(Entity entity)
 		{
-			const char *type = typeid(U).name();
-			const std::size_t hash = get_hashed_id(type);
+			const std::size_t hash = typeid(U).hash_code();
 
 			auto entity_it = std::ranges::find(entities, entity.id);
 			const bool has_component = this->has_component<U>();

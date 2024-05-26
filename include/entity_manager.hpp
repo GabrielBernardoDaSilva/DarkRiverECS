@@ -24,8 +24,8 @@ namespace forged_in_lost_lands_ecs
                 .id = entity_count++,
             };
 
-            std::vector<std::size_t> component_hashes = {get_hashed_id(typeid(T).name())...};
-            component_hashes.emplace(component_hashes.begin(), get_hashed_id(typeid(Entity).name()));
+            std::vector<std::size_t> component_hashes = {typeid(T).hash_code()...};
+            component_hashes.emplace(component_hashes.begin(),typeid(Entity).hash_code());
 
             auto archetypeFounded = std::ranges::find_if(archetypes, [&](Archetype &archetype)
                                                          { return archetype.has_components_by_hash(component_hashes); });
@@ -67,13 +67,13 @@ namespace forged_in_lost_lands_ecs
                     return std::unexpected(moved_entity.error());
                 std::vector<std::size_t> component_hashes = {};
                 archetype.get_archetype_hash(component_hashes);
-                component_hashes.push_back(get_hashed_id(typeid(T).name()));
+                component_hashes.push_back(typeid(T).hash_code());
 
                 auto archetype_founded = std::ranges::find_if(archetypes, [&](Archetype &archetype)
                                                               { return archetype.has_components_by_hash(component_hashes); });
 
                 auto &[entity, components] = moved_entity.value();
-                components.insert(std::make_pair(get_hashed_id(typeid(T).name()), std::make_unique<T>(std::move(component))));
+                components.insert(std::make_pair(typeid(T).hash_code(), std::make_unique<T>(std::move(component))));
 
                 // found archetype
                 if (archetype_founded != archetypes.end())
