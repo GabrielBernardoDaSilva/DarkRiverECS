@@ -14,7 +14,7 @@
 #include <map>
 #include <vector>
 
-namespace forged_in_lost_lands_ecs
+namespace prometheus_ecs
 {
     struct WaitAmountOfSeconds
     {

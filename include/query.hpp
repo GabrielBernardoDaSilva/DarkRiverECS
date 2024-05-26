@@ -9,7 +9,7 @@
 #include <ranges>
 #include <algorithm>
 
-namespace forged_in_lost_lands_ecs
+namespace prometheus_ecs
 {
 
 	template <validation_query_types... T>

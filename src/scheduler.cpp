@@ -1,6 +1,6 @@
 #include "scheduler.hpp"
 
-namespace forged_in_lost_lands_ecs
+namespace prometheus_ecs
 {
     TaskScheduler::TaskScheduler(TaskScheduler &&other) noexcept
     {

@@ -2,7 +2,7 @@
 #include <vector>
 #include <cstddef>
 
-namespace forged_in_lost_lands_ecs
+namespace prometheus_ecs
 {
     class World;
 
@@ -15,7 +15,7 @@ namespace forged_in_lost_lands_ecs
     class Accessor
     {
     public:
-        Accessor(World &lost_land) : lost_land(lost_land) {}
+        Accessor(World &world) : world(world) {}
 
         std::vector<Archetype *> get_archetypes();
         std::size_t get_archetype_size();
@@ -24,9 +24,9 @@ namespace forged_in_lost_lands_ecs
         ExecutorManager &get_executor_manager();
         TaskManager &get_task_manager();
         EntityManager &get_entity_manager();
-        World &get_lost_land();
+        World &get_world();
 
     private:
-        World &lost_land;
+        World &world;
     };
 }

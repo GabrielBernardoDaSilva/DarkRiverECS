@@ -3,7 +3,7 @@
 #include "forged_concepts.hpp"
 #include "query.hpp"
 
-namespace forged_in_lost_lands_ecs
+namespace prometheus_ecs
 {
 	enum class ExecutorType
 	{

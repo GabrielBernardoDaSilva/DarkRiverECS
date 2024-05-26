@@ -4,7 +4,7 @@
 #include <print>
 #include <functional>
 
-namespace forged_in_lost_lands_ecs
+namespace prometheus_ecs
 {
 #define FUNCTION_TRAITS(func) function_traits<decltype(&func)>(), #func
 #define FUNCTION_TRAITS_NAME(func) #func

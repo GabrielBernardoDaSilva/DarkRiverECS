@@ -2,9 +2,9 @@
 #include <print>
 #include <functional>
 
-#include "forged_in_lost_lands_ecs.hpp"
+#include "prometheus_ecs.hpp"
 
-using namespace forged_in_lost_lands_ecs;
+using namespace prometheus_ecs;
 
 struct Velocity : public Component
 {
@@ -72,7 +72,7 @@ void read_position(Query<With<Position &>> query)
 
 class PluginTest : public Plugin
 {
-    virtual void build(World &lost_lands) override
+    virtual void build(World &worlds) override
     {
         std::println("PluginTest on_start");
     }

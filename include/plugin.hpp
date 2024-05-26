@@ -1,6 +1,6 @@
 #pragma once
 
-namespace forged_in_lost_lands_ecs
+namespace prometheus_ecs
 {
     class World;
     class Plugin
@@ -9,6 +9,6 @@ namespace forged_in_lost_lands_ecs
         Plugin() = default;
         virtual ~Plugin() = default;
 
-        virtual void build(World &lost_land) = 0;
+        virtual void build(World &world) = 0;
     };
 }

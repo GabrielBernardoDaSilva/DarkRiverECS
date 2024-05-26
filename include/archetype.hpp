@@ -13,7 +13,7 @@
 #include <ranges>
 #include <algorithm>
 
-namespace forged_in_lost_lands_ecs
+namespace prometheus_ecs
 {
 
 	using EntityId = std::size_t;

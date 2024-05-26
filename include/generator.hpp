@@ -4,7 +4,7 @@
 #include <coroutine>
 #include <cassert>
 
-namespace forged_in_lost_lands_ecs
+namespace prometheus_ecs
 {
     template <typename T>
     struct generator

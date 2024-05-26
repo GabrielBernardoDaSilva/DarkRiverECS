@@ -13,7 +13,7 @@
 #include <print>
 #include <type_traits>
 
-namespace forged_in_lost_lands_ecs
+namespace prometheus_ecs
 {
     class QueryBase;
     class EntityManager;

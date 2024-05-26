@@ -2,39 +2,39 @@
 
 #include "world.hpp"
 
-namespace forged_in_lost_lands_ecs
+namespace prometheus_ecs
 {
     std::vector<Archetype *> Accessor::get_archetypes()
     {
-        return lost_land.create_archetype_ref();
+        return world.create_archetype_ref();
     }
 
     std::size_t Accessor::get_archetype_size()
     {
-        return lost_land.get_entity_manager().get_archetype_size();
+        return world.get_entity_manager().get_archetype_size();
     }
 
     EventManager &Accessor::get_event_manager()
     {
-        return lost_land.get_event_manager();
+        return world.get_event_manager();
     }
 
     ExecutorManager &Accessor::get_executor_manager()
     {
-        return lost_land.get_executor_manager();
+        return world.get_executor_manager();
     }
 
     TaskManager &Accessor::get_task_manager()
     {
-        return lost_land.get_task_manager();
+        return world.get_task_manager();
     }
 
     EntityManager &Accessor::get_entity_manager()
     {
-        return lost_land.get_entity_manager();
+        return world.get_entity_manager();
     }
-    World &Accessor::get_lost_land()
+    World &Accessor::get_world()
     {
-        return lost_land;
+        return world;
     }
 }
