@@ -82,8 +82,7 @@ namespace forged_in_lost_lands_ecs
         {
             executor_manager.add_executor(executor_type, system, accessor);
         }
-        //  lambda [](forged_in_lost_lands_ecs::Query<forged_in_lost_lands_ecs::With<Position &>, forged_in_lost_lands_ecs::Without<>> query)->void
-
+       
         template <function_pointer Lambda>
         void add_executor(ExecutorType executor_type, Lambda &&lambda)
         {
