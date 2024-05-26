@@ -42,7 +42,7 @@ namespace forged_in_lost_lands_ecs
 									};
 		~Query() = default;
 
-		constexpr inline void execute() override
+		inline constexpr void execute() override
 		{
 			for (Archetype *archetype : archetypes)
 			{
@@ -74,19 +74,23 @@ namespace forged_in_lost_lands_ecs
 			}
 		}
 
-		inline constexpr const std::tuple<WithComponent...> &first()
+		inline constexpr const std::optional<std::tuple<WithComponent...>> &first()
 		{
 			if (archetypes.size() != accessor.get_archetype_size())
 				archetypes = accessor.get_archetypes();
 			execute();
+			if (result.empty())
+				return std::nullopt;
 			return result.front();
 		}
 
-		inline constexpr const std::tuple<WithComponent...> &last()
+		inline constexpr const std::optional<std::tuple<WithComponent...>> &last()
 		{
 			if (archetypes.size() != accessor.get_archetype_size())
 				archetypes = accessor.get_archetypes();
 			execute();
+			if (result.empty())
+				return std::nullopt;
 			return result.back();
 		}
 

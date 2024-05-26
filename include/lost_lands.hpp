@@ -54,18 +54,18 @@ namespace forged_in_lost_lands_ecs
         };
 
         template <req_component T>
-        void add_component_to_entity(Entity entity, T component)
+        std::expected<Success, ArchetypeError> add_component_to_entity(Entity entity, T component)
         {
-            entity_manager.add_component_to_entity<T>(entity, component);
+            return entity_manager.add_component_to_entity<T>(entity, component);
         }
 
         template <req_component T>
-        void remove_component_from_entity(Entity entity)
+        std::expected<Success, ArchetypeError> remove_component_from_entity(Entity entity)
         {
-            entity_manager.remove_component_from_entity<T>(entity);
+            return entity_manager.remove_component_from_entity<T>(entity);
         }
 
-        void remove_entity(Entity entity);
+        std::expected<Success, ArchetypeError> remove_entity(Entity entity);
 
         /// archetypes end
 
@@ -82,7 +82,7 @@ namespace forged_in_lost_lands_ecs
         {
             executor_manager.add_executor(executor_type, system, accessor);
         }
-       
+
         template <function_pointer Lambda>
         void add_executor(ExecutorType executor_type, Lambda &&lambda)
         {

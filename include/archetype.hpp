@@ -91,10 +91,10 @@ namespace forged_in_lost_lands_ecs
 			add_components<T...>(components...);
 		}
 
-		std::expected<Entity, archetype_error> remove_entity(Entity entity);
+		std::expected<Entity, ArchetypeError> remove_entity(Entity entity);
 
 		template <class U>
-		std::expected<std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component>>>, archetype_error> remove_component(Entity entity)
+		std::expected<std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component>>>, ArchetypeError> remove_component(Entity entity)
 		{
 			const char *type = typeid(U).name();
 			const std::size_t hash = get_hashed_id(type);
@@ -125,7 +125,7 @@ namespace forged_in_lost_lands_ecs
 
 				return tuple;
 			}
-			return std::unexpected(archetype_error::COMPONENT_NOT_FOUND);
+			return std::unexpected(ArchetypeError::ComponentNotFound);
 		}
 
 		bool has_component_by_hash(std::size_t hash);
@@ -136,7 +136,7 @@ namespace forged_in_lost_lands_ecs
 
 		bool is_empty() const;
 
-		std::expected<std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component>>>, archetype_error> move_entity(Entity entity);
+		std::expected<std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component>>>, ArchetypeError> move_entity(Entity entity);
 
 		void migrate_entity_to_itself(std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component>>> tuple);
 

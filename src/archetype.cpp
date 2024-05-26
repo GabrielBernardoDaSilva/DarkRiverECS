@@ -34,7 +34,7 @@ namespace forged_in_lost_lands_ecs
     {
         return entities.size() == 0;
     }
-    std::expected<Entity, archetype_error> Archetype::remove_entity(Entity entity)
+    std::expected<Entity, ArchetypeError> Archetype::remove_entity(Entity entity)
     {
         auto it = std::ranges::find_if(entities, [entity](EntityId id)
                                        { return id == entity.id; });
@@ -49,9 +49,9 @@ namespace forged_in_lost_lands_ecs
             entities.erase(it);
             return entity;
         }
-        return std::unexpected(archetype_error::ENTITY_NOT_FOUND);
+        return std::unexpected(ArchetypeError::EntityNotFound);
     }
-    std::expected<std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component>>>, archetype_error> Archetype::move_entity(Entity entity)
+    std::expected<std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component>>>, ArchetypeError> Archetype::move_entity(Entity entity)
     {
         auto entity_it = std::ranges::find(entities, entity.id);
         if (entity_it != entities.end())
@@ -66,7 +66,7 @@ namespace forged_in_lost_lands_ecs
             std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component>>> tuple = std::make_tuple(entity, std::move(component_to_migrate));
             return tuple;
         }
-        return std::unexpected(archetype_error::ENTITY_NOT_FOUND);
+        return std::unexpected(ArchetypeError::EntityNotFound);
     }
 
     void Archetype::migrate_entity_to_itself(std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component>>> tuple)

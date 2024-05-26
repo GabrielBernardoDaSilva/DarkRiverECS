@@ -2,16 +2,18 @@
 
 namespace forged_in_lost_lands_ecs
 {
-	enum class archetype_error
+	enum class ArchetypeError
 	{
-		ENTITY_NOT_FOUND,
-		COMPONENT_NOT_FOUND,
-		COMPONENTS_TYPE_DOES_NOT_MATCH
+		EntityNotFound,
+		ComponentNotFound,
+		ComponentTypeDoesNotMatch,
+		EntityAlreadyHasComponent,
+		EntityDoesNotHaveComponent,
 	};
 
 	enum class SchedulerError
 	{
-		TASK_NOT_FOUND
+		TaskNotFound
 	};
 
 	struct Success{};

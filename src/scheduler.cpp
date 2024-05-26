@@ -85,7 +85,7 @@ namespace forged_in_lost_lands_ecs
             task->second.set_running(false);
             return Success{};
         }
-        return std::unexpected(SchedulerError::TASK_NOT_FOUND);
+        return std::unexpected(SchedulerError::TaskNotFound);
     }
 
     std::expected<Success, SchedulerError> TaskManager::resume_task(TaskId id)
@@ -96,7 +96,7 @@ namespace forged_in_lost_lands_ecs
             task->second.set_running(true);
             return Success{};
         }
-        return std::unexpected(SchedulerError::TASK_NOT_FOUND);
+        return std::unexpected(SchedulerError::TaskNotFound);
     }
 
     std::expected<Success, SchedulerError> TaskManager::remove_task(TaskId id)
@@ -107,7 +107,7 @@ namespace forged_in_lost_lands_ecs
             tasks.erase(task);
             return Success{};
         }
-        return std::unexpected(SchedulerError::TASK_NOT_FOUND);
+        return std::unexpected(SchedulerError::TaskNotFound);
     }
 
     void TaskManager::stop_all_tasks()

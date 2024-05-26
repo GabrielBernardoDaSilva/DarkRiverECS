@@ -2,7 +2,7 @@
 
 namespace forged_in_lost_lands_ecs
 {
-    void EntityManager::remove_entity(Entity entity)
+    std::expected<Success, ArchetypeError> EntityManager::remove_entity(Entity entity)
     {
         auto entity_founded = std::ranges::find_if(entities, [&](Entity &e)
                                                    { return e.id == entity.id; });
@@ -12,7 +12,9 @@ namespace forged_in_lost_lands_ecs
             Archetype &archetype = archetypes[archetype_location];
             archetype.remove_entity(*entity_founded);
             entities.erase(entity_founded);
+            return Success{};
         }
+        return std::unexpected(ArchetypeError::EntityNotFound);
     }
 
 } // namespace forged_in_lost_lands_ecs

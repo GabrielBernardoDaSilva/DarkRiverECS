@@ -9,9 +9,9 @@ namespace forged_in_lost_lands_ecs
         return entity_manager;
     }
 
-    void LostLands::remove_entity(Entity entity)
+    std::expected<Success, ArchetypeError> LostLands::remove_entity(Entity entity)
     {
-        entity_manager.remove_entity(entity);
+        return entity_manager.remove_entity(entity);
     }
 
     ExecutorManager &LostLands::get_executor_manager()
