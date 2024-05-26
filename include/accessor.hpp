@@ -2,7 +2,7 @@
 #include <vector>
 #include <cstddef>
 
-namespace forged_in_lost_lands_ecs
+namespace winter_rain_ecs
 {
     class World;
 

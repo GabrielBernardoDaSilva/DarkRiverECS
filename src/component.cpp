@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace forged_in_lost_lands_ecs
+namespace winter_rain_ecs
 {
 
     void ComponentList::add_component(std::unique_ptr<Component> &&component)
@@ -10,7 +10,7 @@ namespace forged_in_lost_lands_ecs
         components.push_back(std::move(component));
     }
 
-    std::unique_ptr<Component> forged_in_lost_lands_ecs::ComponentList::remove_component(std::size_t index)
+    std::unique_ptr<Component> winter_rain_ecs::ComponentList::remove_component(std::size_t index)
     {
         std::unique_ptr<Component> component = std::move(components[index]);
         components.erase(components.begin() + index);

@@ -2,7 +2,7 @@
 #include <exception>
 #include <iostream>
 
-namespace forged_in_lost_lands_ecs
+namespace winter_rain_ecs
 {
     EntityManager &World::get_entity_manager()
     {

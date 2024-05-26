@@ -2,7 +2,7 @@
 
 #include "world.hpp"
 
-namespace forged_in_lost_lands_ecs
+namespace winter_rain_ecs
 {
     std::vector<Archetype *> Accessor::get_archetypes()
     {
