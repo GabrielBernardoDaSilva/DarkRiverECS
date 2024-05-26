@@ -71,20 +71,28 @@ namespace forged_in_lost_lands_ecs
 
         /// systems
 
-        template <typename... Args>
+        template <req_system_args... Args>
         void add_executor(ExecutorType executor_type, std::function<void(Args...)> system)
         {
             executor_manager.add_executor(executor_type, system, accessor);
         }
 
-        template <typename... Args>
+        template <req_system_args... Args>
         void add_executor(ExecutorType executor_type, void (*system)(Args...))
         {
             executor_manager.add_executor(executor_type, system, accessor);
         }
+        //  lambda [](forged_in_lost_lands_ecs::Query<forged_in_lost_lands_ecs::With<Position &>, forged_in_lost_lands_ecs::Without<>> query)->void
+
+        template <function_pointer Lambda>
+        void add_executor(ExecutorType executor_type, Lambda &&lambda)
+        {
+            std::function func{lambda};
+            executor_manager.add_executor(executor_type, func, accessor);
+        }
 
         template <function_pointer... Executors>
-        void add_executors(ExecutorType execute_type, Executors&&... executors)
+        void add_executors(ExecutorType execute_type, Executors &&...executors)
         {
             (add_executor(execute_type, executors), ...);
         }

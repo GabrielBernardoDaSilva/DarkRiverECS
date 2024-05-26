@@ -1,5 +1,6 @@
 
 #include <print>
+#include <functional>
 
 #include "forged_in_lost_lands_ecs.hpp"
 
@@ -76,6 +77,10 @@ class PluginTest : public Plugin
         std::println("PluginTest on_start");
     }
 };
+void p(std::function <void()> f)
+{
+    f();
+}
 
 int main()
 {
@@ -113,9 +118,17 @@ int main()
     // lands.add_executor(ExecutorType::Startup, modifing_pos);
     // lands.add_executor(ExecutorType::Startup, read_position);
 
+    auto pos_query = [](Query<With<Position &>> query) {
+        for (auto &[pos] : query.all())
+        {
+            std::println("Print Lambda Position: x: {} y: {}", pos.x, pos.y);
+        }
+    };
+
     auto &a = modifing_pos;
 
     lands.add_executors(ExecutorType::Startup, modifing_pos, read_position);
+    lands.add_executors(ExecutorType::Startup, pos_query);
 
     lands.run();
     lands.emit(Collision{.collided = true});
@@ -124,6 +137,11 @@ int main()
 
     lands.add_plugin<PluginTest>();
     lands.build_plugins();
+
+    auto f = []() {
+        std::println("Hello");
+    };
+    p(f);
 
     while (true)
     {
