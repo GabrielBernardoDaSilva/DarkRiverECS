@@ -84,7 +84,7 @@ namespace forged_in_lost_lands_ecs
         }
 
         template <function_pointer... Executors>
-        void add_executors(ExecutorType execute_type, Executors... executors)
+        void add_executors(ExecutorType execute_type, Executors&&... executors)
         {
             (add_executor(execute_type, executors), ...);
         }
