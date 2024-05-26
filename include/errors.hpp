@@ -1,6 +1,6 @@
 #pragma once
 
-namespace prometheus_ecs
+namespace forged_in_lost_lands_ecs
 {
 	enum class ArchetypeError
 	{

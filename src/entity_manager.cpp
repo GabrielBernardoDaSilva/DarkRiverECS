@@ -1,6 +1,6 @@
 #include "entity_manager.hpp"
 
-namespace prometheus_ecs
+namespace forged_in_lost_lands_ecs
 {
     std::expected<Success, ArchetypeError> EntityManager::remove_entity(Entity entity)
     {
@@ -17,4 +17,4 @@ namespace prometheus_ecs
         return std::unexpected(ArchetypeError::EntityNotFound);
     }
 
-} // namespace prometheus_ecs
+} // namespace forged_in_lost_lands_ecs

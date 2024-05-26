@@ -1,6 +1,6 @@
 #include "archetype.hpp"
 
-namespace prometheus_ecs
+namespace forged_in_lost_lands_ecs
 {
     Archetype::Archetype(std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component>>> moved_entity)
     {

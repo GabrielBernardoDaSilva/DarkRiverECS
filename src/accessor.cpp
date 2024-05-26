@@ -2,7 +2,7 @@
 
 #include "world.hpp"
 
-namespace prometheus_ecs
+namespace forged_in_lost_lands_ecs
 {
     std::vector<Archetype *> Accessor::get_archetypes()
     {

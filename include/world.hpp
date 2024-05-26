@@ -23,7 +23,7 @@
 #include <tuple>
 #include <string_view>
 
-namespace prometheus_ecs
+namespace forged_in_lost_lands_ecs
 {
 
     class World

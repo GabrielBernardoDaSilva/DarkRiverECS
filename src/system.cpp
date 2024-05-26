@@ -4,7 +4,7 @@
 #include <iostream>
 #include <exception>
 
-namespace prometheus_ecs
+namespace forged_in_lost_lands_ecs
 {
     void ExecutorManager::startup_executor()
     {

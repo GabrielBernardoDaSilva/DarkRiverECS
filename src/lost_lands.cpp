@@ -2,7 +2,7 @@
 #include <exception>
 #include <iostream>
 
-namespace prometheus_ecs
+namespace forged_in_lost_lands_ecs
 {
     EntityManager &World::get_entity_manager()
     {

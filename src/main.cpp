@@ -2,9 +2,9 @@
 #include <print>
 #include <functional>
 
-#include "prometheus_ecs.hpp"
+#include "forged_in_lost_lands_ecs.hpp"
 
-using namespace prometheus_ecs;
+using namespace forged_in_lost_lands_ecs;
 
 struct Velocity : public Component
 {
@@ -42,7 +42,7 @@ void check_collision(Collision collision)
     std::println("Collision: {}", collision.collided);
 }
 
-void modifing_pos(Query<With<Position &, Velocity &>> query, Query<With<Position &>, Without<Velocity &>> q2, EventManager &event_manager, EntityManager &entity_manager)
+void modify_pos(Query<With<Position &, Velocity &>> query, Query<With<Position &>, Without<Velocity &>> q2, EventManager &event_manager, EntityManager &entity_manager)
 {
     entity_manager.add_entity(Position{.x = 100.0f, .y = 100.0f}, Velocity{.x = 100.0f, .y = 100.0f});
     event_manager.subscribe<Collision>(check_collision);
@@ -125,9 +125,9 @@ int main()
         }
     };
 
-    auto &a = modifing_pos;
 
-    lands.add_executors(ExecutorType::Startup, modifing_pos, read_position);
+
+    lands.add_executors(ExecutorType::Startup, modify_pos, read_position);
     lands.add_executors(ExecutorType::Startup, pos_query);
 
     lands.run();

@@ -6,7 +6,7 @@
 #include <expected>
 #include <cstddef>
 
-namespace prometheus_ecs
+namespace forged_in_lost_lands_ecs
 {
     class World;
     class EntityManager
@@ -149,4 +149,4 @@ namespace prometheus_ecs
         std::vector<Entity> entities{};
         std::size_t entity_count{0};
     };
-} // namespace prometheus_ecs
+} // namespace forged_in_lost_lands_ecs

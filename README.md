@@ -1,8 +1,8 @@
-# ForgedInLostLandsEcs
+# Forged In Lost Lands ECS
 
 ![alt text](https://github.com/GabrielBernardoDaSilva/forged_in_lost_lands_ecs/blob/main/forged-in-lost-lands.png)
 
-ForgedInLostLandsEcs is an ECS (Entity-Component-System) library developed in C++23. It provides a powerful framework for building scalable and efficient game engines and simulations.
+Forged In Lost Lands is an ECS (Entity-Component-System) library developed in C++23. It provides a powerful framework for building scalable and efficient game engines and simulations.
 
 ## Features
 
@@ -62,7 +62,7 @@ void check_collision(Collision collision)
     std::println("Collision: {}", collision.collided);
 }
 
-void modifing_pos(Query<With<Position &, Velocity &>> query, Query<With<Position &>, Without<Velocity &>> q2, EventManager &event_manager, EntityManager &entity_manager)
+void modify_pos(Query<With<Position &, Velocity &>> query, Query<With<Position &>, Without<Velocity &>> q2, EventManager &event_manager, EntityManager &entity_manager)
 {
     entity_manager.add_entity(Position{.x = 100.0f, .y = 100.0f}, Velocity{.x = 100.0f, .y = 100.0f});
     event_manager.subscribe<Collision>(check_collision);
@@ -129,8 +129,8 @@ int main()
     lands.add_component_to_entity(e, Health{.health = 100});
     lands.remove_component_from_entity<Health>(e);
 
-    lands.add_executor(modifing_pos);
-    lands.add_executor(read_position);
+    lands.add_executors(ExecutorType::Startup, modify_pos, read_position);
+    lands.add_executors(ExecutorType::Startup, pos_query);
 
     lands.run();
     lands.emit(Collision{.collided = true});

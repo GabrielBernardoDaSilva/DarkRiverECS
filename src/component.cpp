@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace prometheus_ecs
+namespace forged_in_lost_lands_ecs
 {
 
     void ComponentList::add_component(std::unique_ptr<Component> &&component)
@@ -10,7 +10,7 @@ namespace prometheus_ecs
         components.push_back(std::move(component));
     }
 
-    std::unique_ptr<Component> prometheus_ecs::ComponentList::remove_component(std::size_t index)
+    std::unique_ptr<Component> forged_in_lost_lands_ecs::ComponentList::remove_component(std::size_t index)
     {
         std::unique_ptr<Component> component = std::move(components[index]);
         components.erase(components.begin() + index);

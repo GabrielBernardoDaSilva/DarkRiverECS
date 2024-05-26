@@ -5,7 +5,7 @@
 #include <cstddef>
 
 
-namespace prometheus_ecs
+namespace forged_in_lost_lands_ecs
 {
 
     using ComponentId = std::size_t;
