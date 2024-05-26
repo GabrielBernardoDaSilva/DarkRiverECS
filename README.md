@@ -22,9 +22,9 @@ Winter Rain is an ECS (Entity-Component-System) library developed in C++23. It p
 ```cpp
 #include <print>
 
-#include "forged_in_lost_lands_ecs.hpp"
+#include "winter_rain_ecs.hpp"
 
-using namespace forged_in_lost_lands_ecs;
+using namespace winter_rain_ecs;
 
 struct Velocity : public Component
 {
