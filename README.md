@@ -1,8 +1,8 @@
-# Forged In Lost Lands ECS
+# Winter Rain ECS
 
-![alt text](https://github.com/GabrielBernardoDaSilva/forged_in_lost_lands_ecs/blob/main/forged-in-lost-lands.png)
+![alt text](https://github.com/GabrielBernardoDaSilva/forged_in_lost_lands_ecs/blob/main/winter-rain.png)
 
-Forged In Lost Lands is an ECS (Entity-Component-System) library developed in C++23. It provides a powerful framework for building scalable and efficient game engines and simulations.
+Winter Rain is an ECS (Entity-Component-System) library developed in C++23. It provides a powerful framework for building scalable and efficient game engines and simulations.
 
 ## Features
 
@@ -155,4 +155,4 @@ This README provides an overview of the library's features, example usage, requi
 
 ## License
 
-Forged in Lost Lands is licensed under the MIT License. See LICENSE for details.
+Winter Rain is licensed under the MIT License. See LICENSE for details.
