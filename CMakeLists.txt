@@ -12,7 +12,7 @@ include_directories(./include)
 
 # if you want to build executable 
 
-# add_library(${PROJECT_NAME} STATIC ${SOURCES})
-# target_include_directories(${PROJECT_NAME} PUBLIC include)
+add_library(${PROJECT_NAME} STATIC ${SOURCES})
+target_include_directories(${PROJECT_NAME} PUBLIC include)
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+# add_executable(${PROJECT_NAME} ${SOURCES})
