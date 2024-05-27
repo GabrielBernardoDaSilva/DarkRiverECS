@@ -1,10 +1,12 @@
 #pragma once
 #include "forged_concepts.hpp"
+#include "accessor.hpp"
 
 #include <functional>
 #include <unordered_map>
 #include <cstddef>
 #include <any>
+#include <ranges>
 
 namespace winter_rain_ecs
 {
@@ -12,37 +14,38 @@ namespace winter_rain_ecs
     class EventList
     {
     public:
-        EventList() = default;
+        EventList(Accessor &accessor) : m_accessor(accessor) {}
         EventList(const EventList &list) = default;
         EventList(EventList &&list) = default;
 
         void emit(Ev event)
         {
-            for (const auto &[_, subscriber] : subscribers)
-                subscriber(event);
+            for (const auto &subscriber : subscribers | std::views::values)
+                subscriber(m_accessor.get_world(), event);
         }
 
-        void subscribe(std::function<void(Ev)> subscriber)
+        void subscribe(std::function<void(World &, Ev)> subscriber)
         {
             auto hash_code = subscriber.target_type().hash_code();
             subscribers.insert({hash_code, subscriber});
         }
 
-        void unsubscribe(const std::function<void(Ev)> &subscriber)
+        void unsubscribe(const std::function<void(World &, Ev)> &subscriber)
         {
             auto hash_code = subscriber.target_type().hash_code();
             subscribers.erase(hash_code);
         }
 
     private:
-        std::unordered_map<std::size_t, std::function<void(Ev)>> subscribers{};
+        std::unordered_map<std::size_t, std::function<void(World &, Ev)>> subscribers{};
+        Accessor &m_accessor;
     };
 
     // EventManager class
     class EventManager
     {
     public:
-        EventManager() = default;
+        EventManager(Accessor &accessor) : m_accessor(accessor) {}
         EventManager(const EventManager &manager) = delete;
         EventManager(EventManager &&manager) noexcept = default;
 
@@ -51,7 +54,7 @@ namespace winter_rain_ecs
         {
             if (const auto event_list_iter = event_lists.find(typeid(Ev).hash_code()); event_list_iter == event_lists.end())
             {
-                event_lists[typeid(Ev).hash_code()] = std::make_any<EventList<Ev>>();
+                event_lists[typeid(Ev).hash_code()] = std::make_any<EventList<Ev>>(m_accessor);
             }
 
             auto &event_list_any = event_lists[typeid(Ev).hash_code()];
@@ -62,11 +65,11 @@ namespace winter_rain_ecs
         }
 
         template <typename Ev>
-        void subscribe(std::function<void(Ev)> subscriber)
+        void subscribe(std::function<void(World &, Ev)> subscriber)
         {
             if (const auto event_list_iter = event_lists.find(typeid(Ev).hash_code()); event_list_iter == event_lists.end())
             {
-                event_lists[typeid(Ev).hash_code()] = std::make_any<EventList<Ev>>();
+                event_lists[typeid(Ev).hash_code()] = std::make_any<EventList<Ev>>(m_accessor);
             }
 
             auto &event_list_any = event_lists[typeid(Ev).hash_code()];
@@ -77,7 +80,7 @@ namespace winter_rain_ecs
         }
 
         template <typename Ev>
-        void unsubscribe(const std::function<void(Ev)> &subscriber)
+        void unsubscribe(const std::function<void(World &, Ev)> &subscriber)
         {
             if (const auto event_list_iter = event_lists.find(typeid(Ev).hash_code()); event_list_iter != event_lists.end())
             {
@@ -91,5 +94,6 @@ namespace winter_rain_ecs
 
     private:
         std::unordered_map<std::size_t, std::any> event_lists{};
+        Accessor& m_accessor;
     };
 }

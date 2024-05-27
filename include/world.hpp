@@ -24,12 +24,12 @@ namespace winter_rain_ecs
     {
     private:
         std::vector<std::unique_ptr<Plugin>> plugins{};
+        Accessor accessor{*this};
+
         ExecutorManager executor_manager{};
-        EventManager event_manager{};
         TaskManager task_manager{};
         EntityManager entity_manager;
-
-        Accessor accessor{*this};
+        EventManager event_manager{accessor};
 
     public:
         World() = default;
@@ -37,6 +37,7 @@ namespace winter_rain_ecs
         ~World() = default;
 
         /// archetypes
+#pragma region archetypes
 
         EntityManager &get_entity_manager();
 
@@ -61,9 +62,10 @@ namespace winter_rain_ecs
 
         std::expected<Success, ArchetypeError> remove_entity(Entity entity);
 
-        /// archetypes end
-
-        /// systems
+/// archetypes end
+#pragma endregion
+#pragma region executors
+        /// executors
 
         template <req_system_args... Args>
         void add_executor(ExecutorType executor_type, std::function<void(Args...)> system)
@@ -90,10 +92,16 @@ namespace winter_rain_ecs
             (add_executor(execute_type, executors), ...);
         }
 
-        template <validation_query_types... T>
-        Query<T...> query()
+        template <typename WithComponents, typename WithoutComponents>
+        Query<WithComponents, WithoutComponents> query()
         {
-            return Query<T...>{accessor};
+            return Query<WithComponents, WithoutComponents>(accessor);
+        }
+
+        template <typename WithComponents>
+        Query<WithComponents> query()
+        {
+            return Query<WithComponents>(accessor);
         }
 
         ExecutorManager &get_executor_manager();
@@ -101,6 +109,8 @@ namespace winter_rain_ecs
         void run() noexcept;
 
         ///
+#pragma endregion
+#pragma region events
 
         /// events
 
@@ -111,14 +121,13 @@ namespace winter_rain_ecs
         }
 
         template <typename Ev>
-        void subscribe(std::function<void(Ev)> subscriber)
+        void subscribe(std::function<void(World &, Ev)> subscriber)
         {
-            std::println("Subscribing to event: {}", typeid(Ev).name());    
             event_manager.subscribe<Ev>(subscriber);
         }
 
         template <typename Ev>
-        void subscribe(void (*subscriber)(Ev))
+        void subscribe(void (*subscriber)(World &, Ev))
         {
             event_manager.subscribe<Ev>(subscriber);
         }
@@ -136,7 +145,8 @@ namespace winter_rain_ecs
         }
 
         EventManager &get_event_manager();
-
+#pragma endregion
+#pragma region plugins
         // plugins
         template <req_plugin T>
         void add_plugin()
@@ -145,9 +155,9 @@ namespace winter_rain_ecs
         }
 
         void build_plugins();
-
+#pragma endregion
         //
-
+#pragma region tasks
         // tasks
         template <typename... Args>
         TaskId add_task(std::function<generator<WaitAmountOfSeconds>(Args...)> task, Args... args)
@@ -174,6 +184,7 @@ namespace winter_rain_ecs
         void resume_all_tasks();
 
         TaskManager &get_task_manager();
+#pragma endregion
 
         std::vector<Archetype *> create_archetype_ref();
 
