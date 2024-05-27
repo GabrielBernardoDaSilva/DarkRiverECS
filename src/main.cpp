@@ -48,7 +48,7 @@ void check_collision(Collision collision)
 void modify_pos(Query<With<Entity &, Position &, Velocity &, const Name &>> query, Query<With<Position &>, Without<Velocity &>> q2,
                 EventManager &event_manager, EntityManager &entity_manager)
 {
-    entity_manager.add_entity(Position{.x = 200.0f, .y = 200.0f}, Velocity{.x = 200.0f, .y = 200.0f});
+    // entity_manager.add_entity(Position{.x = 200.0f, .y = 200.0f}, Velocity{.x = 200.0f, .y = 200.0f});
     event_manager.subscribe<Collision>(check_collision);
     auto a = query.all();
     auto b = q2.all();
@@ -125,14 +125,16 @@ int main()
     Entity e4 = lands.add_entity(Position{
                                      .x = 100.0f,
                                      .y = 100.0f},
-                                 Velocity{.x = 100.0f, .y = 100.0f},
-                                 Health{.health = 100},
-                                 Name{.name = "Test 1"});
+                                 Velocity{.x = 100.0f, .y = 100.0f}, Health{.health = 100}, Name{.name = "Test 1"});
+
+    lands.show_entities();
 
     lands.add_component_to_entity(e, Health{.health = 300});
+    lands.show_entities();
     // lands.show_archetypes();
     lands.remove_component_from_entity<Health>(e);
     // lands.show_archetypes();
+    lands.show_entities();
 
     // lands.add_executor(ExecutorType::Startup, modifing_pos);
     // lands.add_executor(ExecutorType::Startup, read_position);

@@ -80,4 +80,12 @@ namespace winter_rain_ecs {
         }
         std::println("------------------------------------------------");
     }
+
+    void World::show_entities() const {
+        std::println("--------------------Entities-------------------");
+        for (auto &entity: entity_manager.entities) {
+            std::println("Entity id: {}, Entity Location: {}", entity.id, entity.location);
+        }
+        std::println("------------------------------------------------");
+    }
 }

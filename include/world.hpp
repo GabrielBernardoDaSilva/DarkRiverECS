@@ -178,5 +178,7 @@ namespace winter_rain_ecs
         std::vector<Archetype *> create_archetype_ref();
 
         void show_archetypes() const;
+
+        void show_entities() const;
     };
 }
