@@ -12,5 +12,5 @@ include_directories(./include)
 
 # if you want to build executable 
 
-add_library(${PROJECT_NAME} STARIC ${SOURCES})
+add_library(${PROJECT_NAME} STATIC ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC include)

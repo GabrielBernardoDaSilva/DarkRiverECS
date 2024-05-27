@@ -48,7 +48,7 @@ namespace winter_rain_ecs
         inline constexpr Arg &get_component(ComponentList &components, const std::size_t index)
         {
             auto &component = *components.get_component(index);
-            return dynamic_cast<ComponentWrapper<std::remove_reference_t<Arg>> &>(component).m_component;
+            return dynamic_cast<ComponentWrapper<std::remove_reference_t<std::remove_const_t<Arg>> &>>(component).m_component;
         }
 
         inline constexpr void execute() override
