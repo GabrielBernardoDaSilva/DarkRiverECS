@@ -19,7 +19,8 @@ namespace winter_rain_ecs {
                 return is_done;
             }
             if (amount_of_seconds_to_wait <= 0.0f) {
-                amount_of_seconds_to_wait = task_gen.value()().seconds;
+                // transform to seconds
+                amount_of_seconds_to_wait = task_gen.value()().seconds * 1000;
             } else if (amount_of_seconds_to_wait > 0.0f) {
                 amount_of_seconds_to_wait -= dt;
             }
