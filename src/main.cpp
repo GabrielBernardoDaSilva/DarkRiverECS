@@ -72,8 +72,10 @@ void read_position(Query<With<Position &>> query)
 
 class PluginTest : public Plugin
 {
-    virtual void build(World &worlds) override
+    virtual void build(World &world) override
     {
+        world.subscribe<Collision>([&](Collision collision)
+                                   { std::println("PluginTest Collision"); });
         std::println("PluginTest on_start");
     }
 };
@@ -107,6 +109,8 @@ int main()
         .health = 100};
 
     World lands;
+    lands.add_plugin<PluginTest>();
+    lands.build_plugins();
     Entity e = lands.add_entity(pos, vel);
     Entity e2 = lands.add_entity(pos2, vel2);
     Entity e3 = lands.add_entity(pos3, health);
@@ -135,8 +139,6 @@ int main()
 
     lands.add_task(generate_numbers, 10);
 
-    lands.add_plugin<PluginTest>();
-    lands.build_plugins();
 
     auto f = []()
     {

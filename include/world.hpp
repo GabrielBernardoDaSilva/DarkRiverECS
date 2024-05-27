@@ -113,6 +113,7 @@ namespace winter_rain_ecs
         template <typename Ev>
         void subscribe(std::function<void(Ev)> subscriber)
         {
+            std::println("Subscribing to event: {}", typeid(Ev).name());    
             event_manager.subscribe<Ev>(subscriber);
         }
 
