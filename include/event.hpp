@@ -8,12 +8,7 @@
 
 namespace winter_rain_ecs
 {
-    class Event
-    {
-    };
-
-    template <class Ev>
-        requires req_event_ty<Ev>
+    template <typename Ev>
     class EventList
     {
     public:
@@ -51,7 +46,7 @@ namespace winter_rain_ecs
         EventManager(const EventManager &manager) = delete;
         EventManager(EventManager &&manager) noexcept = default;
 
-        template <req_event_ty Ev>
+        template <typename Ev>
         void emit(Ev event)
         {
             if (const auto event_list_iter = event_lists.find(typeid(Ev).hash_code()); event_list_iter == event_lists.end())
@@ -66,7 +61,7 @@ namespace winter_rain_ecs
             }
         }
 
-        template <req_event_ty Ev>
+        template <typename Ev>
         void subscribe(std::function<void(Ev)> subscriber)
         {
             if (const auto event_list_iter = event_lists.find(typeid(Ev).hash_code()); event_list_iter == event_lists.end())
@@ -81,7 +76,7 @@ namespace winter_rain_ecs
             }
         }
 
-        template <req_event_ty Ev>
+        template <typename Ev>
         void unsubscribe(const std::function<void(Ev)> &subscriber)
         {
             if (const auto event_list_iter = event_lists.find(typeid(Ev).hash_code()); event_list_iter != event_lists.end())

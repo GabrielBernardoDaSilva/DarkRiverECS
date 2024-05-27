@@ -30,7 +30,7 @@ generator<WaitAmountOfSeconds> generate_numbers(int i)
     std::exit(0);
 }
 
-struct Collision : public Event
+struct Collision
 {
     bool collided;
 };
