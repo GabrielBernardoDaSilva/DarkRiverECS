@@ -2,6 +2,8 @@
 
 ![alt text](https://github.com/GabrielBernardoDaSilva/forged_in_lost_lands_ecs/blob/main/winter-rain.png)
 
+[badge.language]: https://img.shields.io/badge/language-C%2B%2B23-red
+
 Winter Rain is an ECS (Entity-Component-System) library developed in C++23. It provides a powerful framework for building scalable and efficient game engines and simulations.
 
 ## Features
@@ -16,6 +18,17 @@ Winter Rain is an ECS (Entity-Component-System) library developed in C++23. It p
 ## Requirements
 
 - C++23 Compiler(clang)
+- [clang](https://clang.llvm.org/)
+- [gcc](https://www.gnu.org/software/gcc/)
+
+## Installation
+
+You can add the root repository to your cmake:
+
+```cmake
+add_subdirectory(WinterRainECS)
+target_link_libraries(${PROJECT_NAME} PRIVATE  WinterRainECS)
+```
 
 ## Example Usage
 
@@ -57,7 +70,7 @@ struct Collision
     bool collided;
 };
 
-void check_collision(Collision collision)
+void check_collision(World& world, Collision collision)
 {
     std::println("Collision: {}", collision.collided);
 }
