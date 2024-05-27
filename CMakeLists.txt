@@ -11,9 +11,6 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 include_directories(./include)
 
 # if you want to build executable 
-if (IS_EXE)
-    add_executable(${PROJECT_NAME} ${SOURCES})
-else()
-    add_library(${PROJECT_NAME} SHARED ${SOURCES})
-    target_include_directories(${PROJECT_NAME} PUBLIC include)
-endif()
+
+add_library(${PROJECT_NAME} STARIC ${SOURCES})
+target_include_directories(${PROJECT_NAME} PUBLIC include)
