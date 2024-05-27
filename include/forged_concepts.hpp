@@ -17,11 +17,9 @@ namespace winter_rain_ecs
     class TaskManager;
     class ExecutorManager;
 
-    template <typename T>
-    concept req_component = std::is_base_of_v<Component, T>;
 
     template <typename T>
-    concept validation_query_types = std::is_reference_v<T> && std::is_base_of_v<Component, std::remove_reference_t<T>>;
+    concept validation_query_types = std::is_reference_v<T>;
 
     template <typename T>
     concept req_event_ty = std::is_base_of_v<Event, T>;

@@ -18,7 +18,7 @@ namespace winter_rain_ecs {
 
         ~EntityManager() = default;
 
-        template<req_component... T>
+        template<typename... T>
         Entity add_entity(T... components) {
             Entity entity{
                 .id = entity_count++,
@@ -46,7 +46,7 @@ namespace winter_rain_ecs {
             return entity;
         };
 
-        template<req_component T>
+        template<typename T>
         std::expected<Success, ArchetypeError> add_component_to_entity(const Entity entity, T component) {
             auto entity_founded = std::ranges::find_if(entities, [&](const Entity &e) { return e.id == entity.id; });
             if (entity_founded != entities.end()) {
@@ -56,9 +56,7 @@ namespace winter_rain_ecs {
                 if (archetype.has_component<T>())
                     return std::unexpected(ArchetypeError::EntityAlreadyHasComponent);
                 // need to move component to archetype or create new archetype
-                std::expected<std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component> > >, ArchetypeError>
-                        moved_entity =
-                                archetype.move_entity(*entity_founded);
+                auto moved_entity = archetype.move_entity(*entity_founded);
                 if (!moved_entity.has_value())
                     return std::unexpected(moved_entity.error());
                 std::vector<std::size_t> component_hashes = {};
@@ -70,7 +68,7 @@ namespace winter_rain_ecs {
                 });
 
                 auto &[entity, components] = moved_entity.value();
-                components.insert(std::make_pair(typeid(T).hash_code(), std::make_unique<T>(std::move(component))));
+                components.insert(std::make_pair(typeid(T).hash_code(), std::make_unique<ComponentWrapper<T>>(std::move(component))));
 
                 // found archetype
                 if (archetype_founded != archetypes.end()) {
@@ -87,7 +85,7 @@ namespace winter_rain_ecs {
             return std::unexpected(ArchetypeError::EntityNotFound);
         }
 
-        template<req_component T>
+        template<typename T>
         std::expected<Success, ArchetypeError> remove_component_from_entity(const Entity entity) {
             auto entity_founded = std::ranges::find_if(entities, [&](const Entity &e) { return e.id == entity.id; });
 
@@ -98,9 +96,7 @@ namespace winter_rain_ecs {
                 if (old_archetype.has_component<T>())
                     return std::unexpected(ArchetypeError::EntityDoesNotHaveComponent);
 
-                std::expected<std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component> > >, ArchetypeError>
-                        moved_entity =
-                                old_archetype.remove_component<T>(*entity_founded);
+                auto moved_entity = old_archetype.remove_component<T>(*entity_founded);
                 if (!moved_entity.has_value())
                     return std::unexpected(moved_entity.error());
                 std::vector<std::size_t> component_hashes = {};

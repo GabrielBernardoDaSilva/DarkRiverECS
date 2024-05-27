@@ -39,18 +39,18 @@ namespace winter_rain_ecs {
 
         EntityManager &get_entity_manager();
 
-        template<req_component... T>
+        template<typename... T>
         Entity add_entity(T... components) {
             auto entity = entity_manager.add_entity(components...);
             return entity;
         };
 
-        template<req_component T>
+        template<typename T>
         std::expected<Success, ArchetypeError> add_component_to_entity(Entity entity, T component) {
             return entity_manager.add_component_to_entity<T>(entity, component);
         }
 
-        template<req_component T>
+        template<typename T>
         std::expected<Success, ArchetypeError> remove_component_from_entity(Entity entity) {
             return entity_manager.remove_component_from_entity<T>(entity);
         }

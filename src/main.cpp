@@ -1,24 +1,22 @@
-
 #include <print>
 #include <functional>
 
 #include "winter_rain_ecs.hpp"
 
 using namespace winter_rain_ecs;
-
-struct Velocity : public Component
+struct Position
 {
     float x, y;
 };
 
-struct Health : public Component
+struct Velocity
+{
+    float x, y;
+};
+
+struct Health
 {
     int health;
-};
-
-struct Position : public Component
-{
-    float x, y;
 };
 
 generator<WaitAmountOfSeconds> generate_numbers(int i)
@@ -42,21 +40,23 @@ void check_collision(Collision collision)
     std::println("Collision: {}", collision.collided);
 }
 
-void modify_pos(Query<With<Position &, Velocity &>> query, Query<With<Position &>, Without<Velocity &>> q2, EventManager &event_manager, EntityManager &entity_manager)
+void modify_pos(Query<With<Entity &, Position &, Velocity &>> query, Query<With<Position &>, Without<Velocity &>> q2,
+                EventManager &event_manager, EntityManager &entity_manager)
 {
-    entity_manager.add_entity(Position{.x = 100.0f, .y = 100.0f}, Velocity{.x = 100.0f, .y = 100.0f});
+    entity_manager.add_entity(Position{.x = 200.0f, .y = 200.0f}, Velocity{.x = 200.0f, .y = 200.0f});
     event_manager.subscribe<Collision>(check_collision);
     auto a = query.all();
     auto b = q2.all();
-    for (auto &[pos, vel] : a)
+    for (auto &[entity, pos, vel] : a)
     {
+        std::println("Entity: {}", entity.id);
         std::println("Position: x: {} y: {}", pos.x, pos.y);
         pos.x += 1.0f;
+        std::println("Velocity: x: {} y: {}", vel.x, vel.y);
     }
 
     for (auto &[pos] : b)
     {
-
         std::println("Pos Health: x: {} y: {}", pos.x, pos.y);
         pos.x += 1.0f;
     }
@@ -77,7 +77,8 @@ class PluginTest : public Plugin
         std::println("PluginTest on_start");
     }
 };
-void p(std::function <void()> f)
+
+void p(std::function<void()> f)
 {
     f();
 }
@@ -110,22 +111,21 @@ int main()
     Entity e2 = lands.add_entity(pos2, vel2);
     Entity e3 = lands.add_entity(pos3, health);
 
-    lands.add_component_to_entity(e, Health{.health = 100});
-    lands.show_archetypes();
+    lands.add_component_to_entity(e, Health{.health = 300});
+    // lands.show_archetypes();
     lands.remove_component_from_entity<Health>(e);
-    lands.show_archetypes();
+    // lands.show_archetypes();
 
     // lands.add_executor(ExecutorType::Startup, modifing_pos);
     // lands.add_executor(ExecutorType::Startup, read_position);
 
-    auto pos_query = [](Query<With<Position &>> query) {
+    auto pos_query = [](Query<With<Position &>> query)
+    {
         for (auto &[pos] : query.all())
         {
             std::println("Print Lambda Position: x: {} y: {}", pos.x, pos.y);
         }
     };
-
-
 
     lands.add_executors(ExecutorType::Startup, modify_pos, read_position);
     lands.add_executors(ExecutorType::Startup, pos_query);
@@ -138,14 +138,15 @@ int main()
     lands.add_plugin<PluginTest>();
     lands.build_plugins();
 
-    auto f = []() {
+    auto f = []()
+    {
         std::println("Hello");
     };
     p(f);
 
+    std::println("Run");
     while (true)
     {
-
         lands.run_tasks(0.16f);
     }
 

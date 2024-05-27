@@ -13,9 +13,10 @@
 #include <algorithm>
 
 namespace winter_rain_ecs {
+    class Component;
     using EntityId = std::size_t;
 
-    struct Entity : public Component {
+    struct Entity {
         EntityId id;
         std::size_t location;
     };
@@ -30,7 +31,7 @@ namespace winter_rain_ecs {
         void add_component(T component) {
             const std::size_t hash = typeid(T).hash_code();
             if (components.contains(hash)) {
-                std::unique_ptr<Component> comp = std::make_unique<T>(component);
+                std::unique_ptr<BaseComponentWrapper> comp = std::make_unique<ComponentWrapper<T> >(component);
                 components[hash]->add_component(std::move(comp));
                 return;
             }
@@ -38,7 +39,7 @@ namespace winter_rain_ecs {
             name.append(typeid(T).name());
 
             auto list = std::make_unique<ComponentList>();
-            std::unique_ptr<Component> comp = std::make_unique<T>(component);
+            std::unique_ptr<BaseComponentWrapper> comp = std::make_unique<ComponentWrapper<T> >(component);
             list->add_component(std::move(comp));
             components.insert({hash, std::move(list)});
         }
@@ -55,7 +56,8 @@ namespace winter_rain_ecs {
             add_components<T...>(components...);
         }
 
-        explicit Archetype(std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component> > > moved_entity);
+        explicit Archetype(
+            std::tuple<Entity, std::map<std::size_t, std::unique_ptr<BaseComponentWrapper> > > moved_entity);
 
         Archetype(Archetype &archetype) = delete;
 
@@ -83,7 +85,7 @@ namespace winter_rain_ecs {
         std::expected<Entity, ArchetypeError> remove_entity(Entity entity);
 
         template<class U>
-        std::expected<std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component> > >, ArchetypeError>
+        std::expected<std::tuple<Entity, std::map<std::size_t, std::unique_ptr<BaseComponentWrapper> > >, ArchetypeError>
         remove_component(Entity entity) {
             const std::size_t hash = typeid(U).hash_code();
 
@@ -96,7 +98,7 @@ namespace winter_rain_ecs {
                 const auto index = std::distance(entities.begin(), entity_it);
                 it->second->remove_component(index);
                 // now we need to prepare other components to migrate this entity to other archetype
-                std::map<std::size_t, std::unique_ptr<Component> > component_to_migrate;
+                std::map<std::size_t, std::unique_ptr<BaseComponentWrapper> > component_to_migrate;
                 for (auto &[key, value]: components) {
                     if (key != hash) {
                         component_to_migrate.insert({key, value->remove_component(index)});
@@ -105,7 +107,7 @@ namespace winter_rain_ecs {
                 // remove entity from this archetype
                 entities.erase(entity_it);
                 // make a tuple with the components to migrate and entity
-                std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component> > > tuple = std::make_tuple(
+                std::tuple<Entity, std::map<std::size_t, std::unique_ptr<BaseComponentWrapper> > > tuple = std::make_tuple(
                     entity, std::move(component_to_migrate));
 
                 return tuple;
@@ -113,18 +115,18 @@ namespace winter_rain_ecs {
             return std::unexpected(ArchetypeError::ComponentNotFound);
         }
 
-        bool has_component_by_hash(std::size_t hash) const;
+        [[nodiscard]] bool has_component_by_hash(std::size_t hash) const;
 
-        bool has_components_by_hash(const std::vector<std::size_t> &hashes) const;
+        [[nodiscard]] bool has_components_by_hash(const std::vector<std::size_t> &hashes) const;
 
         void get_archetype_hash(std::vector<std::size_t> &hashes);
 
         [[nodiscard]] bool is_empty() const;
 
-        std::expected<std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component> > >, ArchetypeError>
+        std::expected<std::tuple<Entity, std::map<std::size_t, std::unique_ptr<BaseComponentWrapper> > >, ArchetypeError>
         move_entity(Entity entity);
 
-        void migrate_entity_to_itself(std::tuple<Entity, std::map<std::size_t, std::unique_ptr<Component> > > tuple);
+        void migrate_entity_to_itself(std::tuple<Entity, std::map<std::size_t, std::unique_ptr<BaseComponentWrapper> > > tuple);
 
         void list_all_components_hash() const;
 
