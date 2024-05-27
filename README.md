@@ -17,7 +17,7 @@ Winter Rain is an ECS (Entity-Component-System) library developed in C++23. It p
 
 ## Requirements
 
-- C++23 Compiler(clang)
+- C++23
 - [clang](https://clang.llvm.org/)
 - [gcc](https://www.gnu.org/software/gcc/)
 
