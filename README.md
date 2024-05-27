@@ -27,7 +27,7 @@ You can add the root repository to your cmake:
 
 ```cmake
 add_subdirectory(WinterRainECS)
-target_link_libraries(${PROJECT_NAME} PRIVATE  WinterRainECS)
+target_link_libraries(${PROJECT_NAME} PRIVATE WinterRainECS)
 ```
 
 ## Example Usage
