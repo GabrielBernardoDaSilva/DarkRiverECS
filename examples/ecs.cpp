@@ -80,6 +80,5 @@ int main()
 
     world.run();
 
-    std::println("Hello, World!");
     return 0;
 }
