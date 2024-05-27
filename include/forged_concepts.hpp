@@ -1,5 +1,4 @@
 #pragma once
-#include <concepts>
 #include <type_traits>
 #include <print>
 #include <functional>
@@ -19,16 +18,16 @@ namespace winter_rain_ecs
     class ExecutorManager;
 
     template <typename T>
-    concept req_component = std::is_base_of<Component, T>::value;
+    concept req_component = std::is_base_of_v<Component, T>;
 
     template <typename T>
     concept validation_query_types = std::is_reference_v<T> && std::is_base_of_v<Component, std::remove_reference_t<T>>;
 
     template <typename T>
-    concept req_event_ty = std::is_base_of<Event, T>::value;
+    concept req_event_ty = std::is_base_of_v<Event, T>;
 
     template <typename T>
-    concept req_plugin = std::is_base_of<Plugin, T>::value;
+    concept req_plugin = std::is_base_of_v<Plugin, T>;
 
     template <typename T>
     concept req_system_args = requires { std::is_base_of_v<QueryBase, T> ||
@@ -90,13 +89,13 @@ namespace winter_rain_ecs
     template <typename Tuple, std::size_t... Is>
     void print_tuple_types(std::index_sequence<Is...>)
     {
-        (print_type<typename std::tuple_element<Is, Tuple>::type>(), ...);
+        (print_type<std::tuple_element_t<Is, Tuple>>(), ...);
     }
 
     template <typename Tuple>
     void print_tuple_types()
     {
-        print_tuple_types<Tuple>(std::make_index_sequence<std::tuple_size<Tuple>::value>{});
+        print_tuple_types<Tuple>(std::make_index_sequence<std::tuple_size_v<Tuple>>{});
     }
 
 }

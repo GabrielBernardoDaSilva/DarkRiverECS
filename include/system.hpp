@@ -8,7 +8,6 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
-#include <optional>
 #include <functional>
 #include <print>
 #include <type_traits>
@@ -86,7 +85,7 @@ namespace winter_rain_ecs
             {
                 executor(get_argument<Args>()...);
             }
-            catch (const std::invalid_argument e)
+            catch (const std::invalid_argument& e)
             {
                 throw e;
             }
@@ -108,13 +107,13 @@ namespace winter_rain_ecs
         ~ExecutorManager() = default;
 
         template <typename... Args>
-        void add_executor(ExecutorType executor_type, std::function<void(Args...)> func, Accessor &accessor)
+        void add_executor(const ExecutorType executor_type, std::function<void(Args...)> func, Accessor &accessor)
         {
             executors[executor_type].push_back(std::make_unique<Executor<Args...>>(func, accessor));
         }
 
         template <typename... Args>
-        void add_executor(ExecutorType executor_type, void (*func)(Args...), Accessor &accessor)
+        void add_executor(const ExecutorType executor_type, void (*func)(Args...), Accessor &accessor)
         {
             executors[executor_type].push_back(std::make_unique<Executor<Args...>>(func, accessor));
         }

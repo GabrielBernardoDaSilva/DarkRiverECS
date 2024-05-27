@@ -2,37 +2,29 @@
 
 #include "generator.hpp"
 #include "errors.hpp"
-
-#include <coroutine>
 #include <functional>
-#include <print>
 #include <cstddef>
-#include <algorithm>
-#include <ranges>
 #include <expected>
 #include <optional>
 #include <map>
 #include <vector>
 
-namespace winter_rain_ecs
-{
-    struct WaitAmountOfSeconds
-    {
+namespace winter_rain_ecs {
+    struct WaitAmountOfSeconds {
         float seconds;
     };
 
-    class TaskScheduler
-    {
+    class TaskScheduler {
     public:
-        template <typename... Args>
-        TaskScheduler(std::function<generator<WaitAmountOfSeconds>(Args...)> task, Args... args) : task_gen(task(args...))
-        {
+        template<typename... Args>
+        explicit TaskScheduler(std::function<generator<WaitAmountOfSeconds>(Args...)> task, Args... args) : task_gen(
+            task(args...)) {
             is_running = true;
         }
 
-        template <typename... Args>
-        TaskScheduler(generator<WaitAmountOfSeconds> (*task)(Args...), Args... args) : task_gen(task(args...))
-        {
+        template<typename... Args>
+        explicit TaskScheduler(generator<WaitAmountOfSeconds> (*task)(Args...),
+                               Args... args) : task_gen(task(args...)) {
             is_running = true;
         }
 
@@ -41,7 +33,7 @@ namespace winter_rain_ecs
 
         bool execute(float dt);
 
-        bool task_is_done();
+        [[nodiscard]] bool task_is_done() const;
 
         void set_running(bool running);
 
@@ -49,28 +41,28 @@ namespace winter_rain_ecs
         bool is_running = false;
         float amount_of_seconds_to_wait = 0.0f;
         bool is_done = false;
-        std::optional<generator<WaitAmountOfSeconds>> task_gen;
+        std::optional<generator<WaitAmountOfSeconds> > task_gen;
     };
 
-    class TaskId
-    {
+    class TaskId {
         friend class TaskManager;
 
     public:
-        TaskId(std::size_t id) : id{id} {}
+        explicit TaskId(std::size_t id) : id{id} {
+        }
 
     private:
         std::size_t id{0};
     };
 
-    class TaskManager
-    {
-
+    class TaskManager {
     public:
         TaskManager() = default;
+
         ~TaskManager() = default;
 
         TaskManager(const TaskManager &) = delete;
+
         TaskManager &operator=(const TaskManager &) = delete;
 
         // move constructor
@@ -94,9 +86,6 @@ namespace winter_rain_ecs
         void resume_all_tasks();
 
         void remove_all_tasks_is_done();
-        
-           
-        
 
     private:
         std::map<std::size_t, TaskScheduler> tasks{};

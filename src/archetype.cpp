@@ -13,11 +13,11 @@ namespace winter_rain_ecs
             this->components.insert({key, std::move(list)});
         }
     }
-    bool Archetype::has_component_by_hash(std::size_t hash)
+    bool Archetype::has_component_by_hash(std::size_t hash) const
     {
         return components.find(hash) != components.end();
     }
-    bool Archetype::has_components_by_hash(const std::vector<std::size_t> &hashes)
+    bool Archetype::has_components_by_hash(const std::vector<std::size_t> &hashes) const
     {
         return std::ranges::all_of(hashes, [this](std::size_t hash)
                                    { return has_component_by_hash(hash); });

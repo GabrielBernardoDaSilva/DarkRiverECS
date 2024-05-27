@@ -10,12 +10,12 @@ namespace winter_rain_ecs
     {
         try
         {
-            for (auto &executor : executors[ExecutorType::Startup])
+            for (const auto &executor : executors[ExecutorType::Startup])
             {
                 executor->execute();
             }
         }
-        catch (const std::invalid_argument e)
+        catch (const std::invalid_argument& e)
         {
             throw e;
         }
@@ -25,12 +25,12 @@ namespace winter_rain_ecs
     {
         try
         {
-            for (auto &executor : executors[ExecutorType::Update])
+            for (const auto &executor : executors[ExecutorType::Update])
             {
                 executor->execute();
             }
         }
-        catch (const std::invalid_argument e)
+        catch (const std::invalid_argument& e)
         {
             throw e;
         }
@@ -39,12 +39,12 @@ namespace winter_rain_ecs
     {
         try
         {
-            for (auto &executor : executors[ExecutorType::End])
+            for (const auto &executor : executors[ExecutorType::End])
             {
                 executor->execute();
             }
         }
-        catch (const std::invalid_argument e)
+        catch (const std::invalid_argument& e)
         {
             throw e;
         }

@@ -49,20 +49,18 @@ namespace winter_rain_ecs
     public:
         EventManager() = default;
         EventManager(const EventManager &manager) = delete;
-        EventManager(EventManager &&manager) = default;
+        EventManager(EventManager &&manager) noexcept = default;
 
         template <req_event_ty Ev>
         void emit(Ev event)
         {
-            auto event_list_iter = event_lists.find(typeid(Ev).hash_code());
-            if (event_list_iter == event_lists.end())
+            if (const auto event_list_iter = event_lists.find(typeid(Ev).hash_code()); event_list_iter == event_lists.end())
             {
                 event_lists[typeid(Ev).hash_code()] = std::make_any<EventList<Ev>>();
             }
 
             auto &event_list_any = event_lists[typeid(Ev).hash_code()];
-            auto event_list = std::any_cast<EventList<Ev>>(&event_list_any);
-            if (event_list)
+            if (auto event_list = std::any_cast<EventList<Ev>>(&event_list_any))
             {
                 event_list->emit(std::move(event));
             }
@@ -71,16 +69,13 @@ namespace winter_rain_ecs
         template <req_event_ty Ev>
         void subscribe(std::function<void(Ev)> subscriber)
         {
-
-            auto event_list_iter = event_lists.find(typeid(Ev).hash_code());
-            if (event_list_iter == event_lists.end())
+            if (const auto event_list_iter = event_lists.find(typeid(Ev).hash_code()); event_list_iter == event_lists.end())
             {
                 event_lists[typeid(Ev).hash_code()] = std::make_any<EventList<Ev>>();
             }
 
             auto &event_list_any = event_lists[typeid(Ev).hash_code()];
-            auto event_list = std::any_cast<EventList<Ev>>(&event_list_any);
-            if (event_list)
+            if (auto event_list = std::any_cast<EventList<Ev>>(&event_list_any))
             {
                 event_list->subscribe(std::move(subscriber));
             }
@@ -89,12 +84,10 @@ namespace winter_rain_ecs
         template <req_event_ty Ev>
         void unsubscribe(const std::function<void(Ev)> &subscriber)
         {
-            auto event_list_iter = event_lists.find(typeid(Ev).hash_code());
-            if (event_list_iter != event_lists.end())
+            if (const auto event_list_iter = event_lists.find(typeid(Ev).hash_code()); event_list_iter != event_lists.end())
             {
                 auto &event_list_any = event_lists[typeid(Ev).hash_code()];
-                auto event_list = std::any_cast<EventList<Ev>>(&event_list_any);
-                if (event_list)
+                if (auto event_list = std::any_cast<EventList<Ev>>(&event_list_any))
                 {
                     event_list->unsubscribe(subscriber);
                 }

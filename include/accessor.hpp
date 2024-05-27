@@ -15,16 +15,16 @@ namespace winter_rain_ecs
     class Accessor
     {
     public:
-        Accessor(World &world) : world(world) {}
+        explicit Accessor(World &world) : world(world) {}
 
-        std::vector<Archetype *> get_archetypes();
-        std::size_t get_archetype_size();
+        std::vector<Archetype *> get_archetypes() const;
+        std::size_t get_archetype_size() const;
 
-        EventManager &get_event_manager();
-        ExecutorManager &get_executor_manager();
-        TaskManager &get_task_manager();
-        EntityManager &get_entity_manager();
-        World &get_world();
+        EventManager &get_event_manager() const;
+        ExecutorManager &get_executor_manager() const;
+        TaskManager &get_task_manager() const;
+        EntityManager &get_entity_manager() const;
+        World &get_world() const;
 
     private:
         World &world;

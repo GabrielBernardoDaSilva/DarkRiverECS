@@ -34,12 +34,12 @@ namespace winter_rain_ecs
 	class Query;
 
 	template <typename... WithComponent, typename... WithoutComponents>
-	class Query<With<WithComponent...>, Without<WithoutComponents...>> : public QueryBase
+	class Query<With<WithComponent...>, Without<WithoutComponents...>>final : public QueryBase
 	{
 	public:
-		Query(Accessor &accessor) : accessor(accessor) {
+		explicit Query(Accessor &accessor) : accessor(accessor) {
 									};
-		~Query() = default;
+		~Query() override = default;
 
 		inline constexpr void execute() override
 		{
@@ -48,20 +48,20 @@ namespace winter_rain_ecs
 				auto &components = archetype->get_components();
 				auto &entities = archetype->get_entities();
 
-				bool is_archetype_components_bigger = with_components.size() > components.size();
+				const bool is_archetype_components_bigger = with_components.size() > components.size();
 
-				bool is_archetype_empty = archetype->is_empty();
+				const bool is_archetype_empty = archetype->is_empty();
 
-				bool is_with_components = std::ranges::any_of(components | std::views::keys, [&](std::size_t key)
+				const bool is_with_components = std::ranges::any_of(components | std::views::keys, [&](const std::size_t key)
 															  { return std::ranges::find(with_components.begin(), with_components.end(), key) != with_components.end(); });
-				bool is_without_components = std::ranges::any_of(components | std::views::keys, [&](std::size_t key)
+				const bool is_without_components = std::ranges::any_of(components | std::views::keys, [&](const std::size_t key)
 																 { return std::ranges::find(without_components.begin(), without_components.end(), key) != without_components.end(); });
 
 				if (is_with_components && !is_without_components && !is_archetype_components_bigger && !is_archetype_empty)
 				{
 					for (std::size_t i = 0; i < entities.size(); i++)
 					{
-						if (((components.find(typeid(WithComponent).hash_code())) != components.end() && ...))
+						if (((components.contains(typeid(WithComponent).hash_code())) && ...))
 							{
 								auto component_tuple = std::tie(*static_cast<std::remove_reference_t<WithComponent> *>(
 									components[typeid(WithComponent).hash_code()]->get_component(i).get())...);
