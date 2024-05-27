@@ -1,5 +1,6 @@
 #include "component.hpp"
 
+#include <print>
 #include <memory>
 
 namespace winter_rain_ecs

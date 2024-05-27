@@ -21,12 +21,12 @@ namespace winter_rain_ecs
     }
     bool Archetype::has_components_by_hash(const std::vector<std::size_t> &hashes) const
     {
-        return std::ranges::all_of(hashes, [this](const std::size_t hash)
-                                   { return has_component_by_hash(hash); });
+        return std::ranges::all_of(components | std::views::keys, [&hashes](const std::size_t hash)
+                                   { return std::ranges::find(hashes, hash) != hashes.end(); }) && hashes.size() == components.size();
     }
     void Archetype::get_archetype_hash(std::vector<std::size_t> &hashes)
     {
-        for (const auto &key: components | std::views::keys)
+        for (const auto &key : components | std::views::keys)
         {
             hashes.push_back(key);
         }
@@ -39,11 +39,12 @@ namespace winter_rain_ecs
     std::expected<Entity, ArchetypeError> Archetype::remove_entity(Entity entity)
     {
         if (const auto it = std::ranges::find_if(entities, [entity](EntityId id)
-                                                 { return id == entity.id; }); it != entities.end())
+                                                 { return id == entity.id; });
+            it != entities.end())
         {
             const auto index = std::distance(entities.begin(), it);
             // remove components from this entity
-            for (const auto &value: components | std::views::values)
+            for (const auto &value : components | std::views::values)
             {
                 value->remove_component(index);
             }
