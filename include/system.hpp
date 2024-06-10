@@ -33,11 +33,11 @@ namespace winter_rain_ecs
     class Executor : public ExecutorBase
     {
     public:
-        Executor(std::function<void(Args...)> func, Accessor &accessor) : executor(func), accessor(accessor)
+        Executor(std::function<void(Args...)> func, Accessor &accessor) : m_executor(func), m_accessor(accessor)
         {
         }
 
-        Executor(void (*func)(Args...), Accessor &accessor) : executor(func), accessor(accessor)
+        Executor(void (*func)(Args...), Accessor &accessor) : m_executor(func), m_accessor(accessor)
         {
         }
 
@@ -67,15 +67,15 @@ namespace winter_rain_ecs
             constexpr bool is_executor_manager = std::is_same_v<ExecutorManager, std::remove_reference_t<Arg>>;
             constexpr bool is_entity_manager = std::is_same_v<EntityManager, std::remove_reference_t<Arg>>;
             if constexpr (is_base_query)
-                return Arg{accessor};
+                return Arg{m_accessor};
             else if constexpr (is_event_manager)
-                return static_cast<Arg>(accessor.get_event_manager());
+                return static_cast<Arg>(m_accessor.get_event_manager());
             else if constexpr (is_task_manager)
-                return static_cast<Arg>(accessor.get_task_manager());
+                return static_cast<Arg>(m_accessor.get_task_manager());
             else if constexpr (is_executor_manager)
-                return static_cast<Arg>(accessor.get_executor_manager());
+                return static_cast<Arg>(m_accessor.get_executor_manager());
             else if constexpr (is_entity_manager)
-                return static_cast<Arg>(accessor.get_entity_manager());
+                return static_cast<Arg>(m_accessor.get_entity_manager());
             throw std::invalid_argument("Invalid argument type");
         }
 
@@ -83,7 +83,7 @@ namespace winter_rain_ecs
         {
             try
             {
-                executor(get_argument<Args>()...);
+                m_executor(get_argument<Args>()...);
             }
             catch (const std::invalid_argument& e)
             {
@@ -92,8 +92,8 @@ namespace winter_rain_ecs
         }
 
     private:
-        Accessor &accessor;
-        std::function<void(Args...)> executor;
+        Accessor &m_accessor;
+        std::function<void(Args...)> m_executor;
     };
 
     class ExecutorManager
@@ -109,13 +109,13 @@ namespace winter_rain_ecs
         template <typename... Args>
         void add_executor(const ExecutorType executor_type, std::function<void(Args...)> func, Accessor &accessor)
         {
-            executors[executor_type].push_back(std::make_unique<Executor<Args...>>(func, accessor));
+            m_executors[executor_type].push_back(std::make_unique<Executor<Args...>>(func, accessor));
         }
 
         template <typename... Args>
         void add_executor(const ExecutorType executor_type, void (*func)(Args...), Accessor &accessor)
         {
-            executors[executor_type].push_back(std::make_unique<Executor<Args...>>(func, accessor));
+            m_executors[executor_type].push_back(std::make_unique<Executor<Args...>>(func, accessor));
         }
 
         void startup_executor();
@@ -125,6 +125,6 @@ namespace winter_rain_ecs
         void shutdown_executor();
 
     private:
-        std::unordered_map<ExecutorType, std::vector<std::unique_ptr<ExecutorBase>>> executors{};
+        std::unordered_map<ExecutorType, std::vector<std::unique_ptr<ExecutorBase>>> m_executors{};
     };
 }

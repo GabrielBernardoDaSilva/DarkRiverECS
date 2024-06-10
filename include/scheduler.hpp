@@ -17,15 +17,15 @@ namespace winter_rain_ecs {
     class TaskScheduler {
     public:
         template<typename... Args>
-        explicit TaskScheduler(std::function<generator<WaitAmountOfSeconds>(Args...)> task, Args... args) : task_gen(
+        explicit TaskScheduler(std::function<generator<WaitAmountOfSeconds>(Args...)> task, Args... args) : m_task_gen(
             task(args...)) {
-            is_running = true;
+            m_is_running = true;
         }
 
         template<typename... Args>
         explicit TaskScheduler(generator<WaitAmountOfSeconds> (*task)(Args...),
-                               Args... args) : task_gen(task(args...)) {
-            is_running = true;
+                               Args... args) : m_task_gen(task(args...)) {
+            m_is_running = true;
         }
 
         // move constructor
@@ -38,21 +38,21 @@ namespace winter_rain_ecs {
         void set_running(bool running);
 
     private:
-        bool is_running = false;
-        float amount_of_seconds_to_wait = 0.0f;
-        bool is_done = false;
-        std::optional<generator<WaitAmountOfSeconds> > task_gen;
+        bool m_is_running = false;
+        float m_amount_of_seconds_to_wait = 0.0f;
+        bool m_is_done = false;
+        std::optional<generator<WaitAmountOfSeconds> > m_task_gen;
     };
 
     class TaskId {
         friend class TaskManager;
 
     public:
-        explicit TaskId(std::size_t id) : id{id} {
+        explicit TaskId(std::size_t id) : m_id{id} {
         }
 
     private:
-        std::size_t id{0};
+        std::size_t m_id{0};
     };
 
     class TaskManager {
@@ -88,8 +88,8 @@ namespace winter_rain_ecs {
         void remove_all_tasks_is_done();
 
     private:
-        std::map<std::size_t, TaskScheduler> tasks{};
-        std::size_t task_id{0};
-        std::vector<std::size_t> tasks_to_remove{};
+        std::map<std::size_t, TaskScheduler> m_tasks{};
+        std::size_t m_task_id{0};
+        std::vector<std::size_t> m_tasks_to_remove{};
     };
 }

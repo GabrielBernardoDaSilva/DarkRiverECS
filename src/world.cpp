@@ -4,22 +4,22 @@
 
 namespace winter_rain_ecs {
     EntityManager &World::get_entity_manager() {
-        return entity_manager;
+        return m_entity_manager;
     }
 
     std::expected<Success, ArchetypeError> World::remove_entity(const Entity entity) {
-        return entity_manager.remove_entity(entity);
+        return m_entity_manager.remove_entity(entity);
     }
 
     ExecutorManager &World::get_executor_manager() {
-        return executor_manager;
+        return m_executor_manager;
     }
 
     void World::run() noexcept {
         try {
-            executor_manager.startup_executor();
-            executor_manager.execute();
-            executor_manager.shutdown_executor();
+            m_executor_manager.startup_executor();
+            m_executor_manager.execute();
+            m_executor_manager.shutdown_executor();
         } catch (const std::invalid_argument &e) {
             std::cerr << e.what() << '\n';
             std::exit(1);
@@ -27,47 +27,47 @@ namespace winter_rain_ecs {
     }
 
     EventManager &World::get_event_manager() {
-        return event_manager;
+        return m_event_manager;
     }
 
     void World::build_plugins() {
-        for (auto &plugin: plugins) {
+        for (auto &plugin: m_plugins) {
             plugin->build(*this);
         }
     }
 
     void World::run_tasks(const float dt) {
-        task_manager.execute_all(dt);
+        m_task_manager.execute_all(dt);
     }
 
     std::expected<Success, SchedulerError> World::resume_task(const TaskId id) {
-        return task_manager.resume_task(id);
+        return m_task_manager.resume_task(id);
     }
 
     std::expected<Success, SchedulerError> World::stop_task(const TaskId id) {
-        return task_manager.stop_task(id);
+        return m_task_manager.stop_task(id);
     }
 
     std::expected<Success, SchedulerError> World::remove_task(const TaskId id) {
-        return task_manager.remove_task(id);
+        return m_task_manager.remove_task(id);
     }
 
     void World::stop_all_tasks() {
-        task_manager.stop_all_tasks();
+        m_task_manager.stop_all_tasks();
     }
 
     void World::resume_all_tasks() {
-        task_manager.resume_all_tasks();
+        m_task_manager.resume_all_tasks();
     }
 
     TaskManager &World::get_task_manager() {
-        return task_manager;
+        return m_task_manager;
     }
 
     std::vector<Archetype *> World::create_archetype_ref() {
         std::vector<Archetype *> archetypes_ptr{};
-        archetypes_ptr.reserve(entity_manager.m_archetypes.size());
-        for (auto &archetype: entity_manager.m_archetypes) {
+        archetypes_ptr.reserve(m_entity_manager.m_archetypes.size());
+        for (auto &archetype: m_entity_manager.m_archetypes) {
             archetypes_ptr.push_back(&archetype);
         }
         return archetypes_ptr;
@@ -75,7 +75,7 @@ namespace winter_rain_ecs {
 
     void World::show_archetypes() const {
         std::println("--------------------Archetypes-------------------");
-        for (auto &archetype: entity_manager.m_archetypes) {
+        for (auto &archetype: m_entity_manager.m_archetypes) {
             archetype.list_all_components_hash();
         }
         std::println("------------------------------------------------");
@@ -83,7 +83,7 @@ namespace winter_rain_ecs {
 
     void World::show_entities() const {
         std::println("--------------------Entities-------------------");
-        for (auto &entity: entity_manager.m_entities) {
+        for (auto &entity: m_entity_manager.m_entities) {
             std::println("Entity id: {}, Entity Location: {}", entity.id, entity.location);
         }
         std::println("------------------------------------------------");
