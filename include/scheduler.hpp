@@ -9,7 +9,7 @@
 #include <map>
 #include <vector>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     struct WaitAmountOfSeconds
     {

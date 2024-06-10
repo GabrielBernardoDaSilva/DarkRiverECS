@@ -1,10 +1,10 @@
-# Winter Rain ECS
+# Dark River ECS
 
-![alt text](https://github.com/GabrielBernardoDaSilva/forged_in_lost_lands_ecs/blob/main/winter-rain.png)
+![alt text](https://github.com/GabrielBernardoDaSilva/forged_in_lost_lands_ecs/blob/main/darkriver.png)
 
 [badge.language]: https://img.shields.io/badge/language-C%2B%2B23-red
 
-Winter Rain is an ECS (Entity-Component-System) library developed in C++23. It provides a powerful framework for building scalable and efficient game engines and simulations.
+Dark River is an ECS (Entity-Component-System) library developed in C++23. It provides a powerful framework for building scalable and efficient game engines and simulations.
 
 ## Features
 
@@ -36,9 +36,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE WinterRainECS)
 #include <print>
 #include <functional>
 
-#include "winter_rain_ecs.hpp"
+#include "darkriver.hpp"
 
-using namespace winter_rain_ecs;
+using namespace darkriver;
 struct Position
 {
     float x, y;
@@ -192,4 +192,4 @@ This README provides an overview of the library's features, example usage, requi
 
 ## License
 
-Winter Rain is licensed under the MIT License. See LICENSE for details.
+Dark River is licensed under the MIT License. See LICENSE for details.

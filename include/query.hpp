@@ -1,7 +1,7 @@
 #pragma once
 #include "archetype.hpp"
 #include "component.hpp"
-#include "forged_concepts.hpp"
+#include "custom_concepts.hpp"
 #include "accessor.hpp"
 
 #include <vector>
@@ -9,7 +9,7 @@
 #include <ranges>
 #include <algorithm>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
 
     template <validation_query_types... T>

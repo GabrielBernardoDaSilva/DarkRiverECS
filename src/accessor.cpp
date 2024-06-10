@@ -2,7 +2,7 @@
 
 #include "world.hpp"
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     std::vector<Archetype *> Accessor::get_archetypes() const
     {

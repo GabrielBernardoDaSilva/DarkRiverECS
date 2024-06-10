@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(WinterRainECS VERSION 0.5 LANGUAGES CXX)
+project(DarkRiverECS VERSION 0.5 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 

@@ -3,7 +3,7 @@
 #include <print>
 #include <memory>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
 
     void ComponentList::add_component(std::unique_ptr<BaseComponentWrapper> &&component)
@@ -11,7 +11,7 @@ namespace winter_rain_ecs
         m_components.push_back(std::move(component));
     }
 
-    std::unique_ptr<BaseComponentWrapper> winter_rain_ecs::ComponentList::remove_component(const std::size_t index)
+    std::unique_ptr<BaseComponentWrapper> darkriver::ComponentList::remove_component(const std::size_t index)
     {
         std::unique_ptr<BaseComponentWrapper> component = std::move(m_components[index]);
         m_components.erase(m_components.begin() + index);

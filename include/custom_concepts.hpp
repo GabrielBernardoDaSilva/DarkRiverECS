@@ -3,7 +3,7 @@
 #include <print>
 #include <functional>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
 #define FUNCTION_TRAITS(func) function_traits<decltype(&func)>(), #func
 #define FUNCTION_TRAITS_NAME(func) #func

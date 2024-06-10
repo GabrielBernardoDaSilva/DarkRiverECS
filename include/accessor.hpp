@@ -2,7 +2,7 @@
 #include <vector>
 #include <cstddef>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     class World;
 

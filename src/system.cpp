@@ -4,7 +4,7 @@
 #include <iostream>
 #include <exception>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     void ExecutorManager::startup_executor()
     {

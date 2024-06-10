@@ -2,7 +2,7 @@
 
 #include "executor.hpp"
 #include "query.hpp"
-#include "forged_concepts.hpp"
+#include "custom_concepts.hpp"
 #include "accessor.hpp"
 
 #include <unordered_map>
@@ -12,7 +12,7 @@
 #include <print>
 #include <type_traits>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     class QueryBase;
     class EntityManager;

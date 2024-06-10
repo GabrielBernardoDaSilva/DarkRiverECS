@@ -11,7 +11,7 @@
 #include <string>
 #include <algorithm>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     class Component;
     using EntityId = std::size_t;

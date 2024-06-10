@@ -4,7 +4,7 @@
 #include <memory>
 #include <cstddef>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     using ComponentId = std::size_t;
 

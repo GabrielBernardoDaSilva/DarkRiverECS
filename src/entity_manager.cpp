@@ -1,6 +1,6 @@
 #include "entity_manager.hpp"
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     void EntityManager::remove_archetype_if_needed(const std::size_t archetype_location)
     {
@@ -31,4 +31,4 @@ namespace winter_rain_ecs
         }
         return std::unexpected(ArchetypeError::EntityNotFound);
     }
-} // namespace winter_rain_ecs
+} // namespace darkriver

@@ -1,5 +1,5 @@
 #pragma once
-#include "forged_concepts.hpp"
+#include "custom_concepts.hpp"
 #include "accessor.hpp"
 
 #include <functional>
@@ -8,7 +8,7 @@
 #include <any>
 #include <ranges>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     template <typename Ev>
     class EventList

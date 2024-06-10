@@ -2,7 +2,7 @@
 
 #include "archetype.hpp"
 #include "system.hpp"
-#include "forged_concepts.hpp"
+#include "custom_concepts.hpp"
 #include "errors.hpp"
 #include "system.hpp"
 #include "event.hpp"
@@ -18,7 +18,7 @@
 #include <expected>
 #include <functional>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     class World
     {

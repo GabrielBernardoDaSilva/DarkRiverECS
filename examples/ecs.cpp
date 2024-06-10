@@ -1,6 +1,6 @@
 #include <print>
 #include <string>
-#include "winter_rain_ecs.hpp"
+#include "darkriver.hpp"
 
 struct Health
 {
@@ -26,8 +26,8 @@ struct Attack
     int damage;
 };
 
-void medusa_attack(winter_rain_ecs::Query<winter_rain_ecs::With<Health &, Position &, Name &, CreepySnakeHair &>> query,
-                   winter_rain_ecs::Query<winter_rain_ecs::With<Health &, Position &, Name &>> query2, winter_rain_ecs::EventManager &event_manager)
+void medusa_attack(darkriver::Query<darkriver::With<Health &, Position &, Name &, CreepySnakeHair &>> query,
+                   darkriver::Query<darkriver::With<Health &, Position &, Name &>> query2, darkriver::EventManager &event_manager)
 {
 
     for (auto [health, pos, name, _] : query.all())
@@ -43,7 +43,7 @@ void medusa_attack(winter_rain_ecs::Query<winter_rain_ecs::With<Health &, Positi
     }
 }
 
-void print_names(winter_rain_ecs::Query<winter_rain_ecs::With<const Name &>> query)
+void print_names(darkriver::Query<darkriver::With<const Name &>> query)
 {
     for (auto [name] : query.all())
     {
@@ -54,11 +54,11 @@ void print_names(winter_rain_ecs::Query<winter_rain_ecs::With<const Name &>> que
 int main()
 {
 
-    winter_rain_ecs::World world;
+    darkriver::World world;
 
-    world.subscribe<Attack>([](winter_rain_ecs::World &world, const Attack &attack)
+    world.subscribe<Attack>([](darkriver::World &world, const Attack &attack)
                             {
-        auto query_perseus = world.query<winter_rain_ecs::With<winter_rain_ecs::Entity&, Health &, Name &>>();
+        auto query_perseus = world.query<darkriver::With<darkriver::Entity&, Health &, Name &>>();
         for (auto [ent, health, name] : query_perseus.all())
         {
             health.health -= attack.damage;
@@ -76,7 +76,7 @@ int main()
     world.add_entity(Position{0.0f, 0.0f}, Health{10000}, Name{"Zeus"});
     world.add_entity(Health{10000}, Name{"Prometheus"});
 
-    world.add_executors(winter_rain_ecs::ExecutorType::Startup, medusa_attack, print_names);
+    world.add_executors(darkriver::ExecutorType::Startup, medusa_attack, print_names);
 
     world.run();
 

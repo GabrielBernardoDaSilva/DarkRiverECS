@@ -2,7 +2,7 @@
 
 #include <ranges>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     Archetype::Archetype(std::tuple<Entity, std::map<std::size_t, std::unique_ptr<BaseComponentWrapper>>> moved_entity)
     {

@@ -2,7 +2,7 @@
 #include <exception>
 #include <iostream>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     EntityManager &World::get_entity_manager()
     {

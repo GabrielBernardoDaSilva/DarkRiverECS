@@ -4,7 +4,7 @@
 #include <coroutine>
 #include <cassert>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     template <typename T>
     struct generator

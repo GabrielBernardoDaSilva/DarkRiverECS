@@ -1,5 +1,5 @@
 #pragma once
-#include "forged_concepts.hpp"
+#include "custom_concepts.hpp"
 #include "archetype.hpp"
 #include "errors.hpp"
 
@@ -7,7 +7,7 @@
 #include <cstddef>
 #include <typeinfo>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     class World;
 
@@ -155,4 +155,4 @@ namespace winter_rain_ecs
 
         void remove_archetype_if_needed(const std::size_t archetype_location);
     };
-} // namespace winter_rain_ecs
+} // namespace darkriver

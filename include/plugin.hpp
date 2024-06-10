@@ -1,6 +1,6 @@
 #pragma once
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     class World;
     class Plugin

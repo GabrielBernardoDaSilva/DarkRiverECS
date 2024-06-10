@@ -2,7 +2,7 @@
 
 #include <ranges>
 
-namespace winter_rain_ecs
+namespace darkriver
 {
     TaskScheduler::TaskScheduler(TaskScheduler &&other) noexcept
     {
