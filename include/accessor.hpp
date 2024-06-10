@@ -15,7 +15,7 @@ namespace winter_rain_ecs
     class Accessor
     {
     public:
-        explicit Accessor(World &world) : world(world) {}
+        explicit Accessor(World &world) : m_world(world) {}
 
         [[nodiscard]] std::vector<Archetype *> get_archetypes() const;
         [[nodiscard]] std::size_t get_archetype_size() const;
@@ -27,6 +27,6 @@ namespace winter_rain_ecs
         [[nodiscard]] World &get_world() const;
 
     private:
-        World &world;
+        World &m_world;
     };
 }

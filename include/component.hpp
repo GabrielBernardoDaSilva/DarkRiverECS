@@ -4,28 +4,30 @@
 #include <memory>
 #include <cstddef>
 
-
-namespace winter_rain_ecs {
+namespace winter_rain_ecs
+{
     using ComponentId = std::size_t;
 
-    class BaseComponentWrapper {
+    class BaseComponentWrapper
+    {
     public:
         virtual ~BaseComponentWrapper() = default;
     };
 
-
-    template<typename T>
-    struct ComponentWrapper final : public BaseComponentWrapper {
-        explicit ComponentWrapper(T component): m_component(component) {
+    template <typename T>
+    struct ComponentWrapper final : public BaseComponentWrapper
+    {
+        explicit ComponentWrapper(T component) : m_component(component)
+        {
         }
 
         T m_component;
     };
 
-
-    class ComponentList {
+    class ComponentList
+    {
     private:
-        std::vector<std::unique_ptr<BaseComponentWrapper> > components;
+        std::vector<std::unique_ptr<BaseComponentWrapper>> m_components;
 
     public:
         ComponentList() = default;
@@ -36,12 +38,9 @@ namespace winter_rain_ecs {
 
         void add_component(std::unique_ptr<BaseComponentWrapper> &&component);
 
-
         std::unique_ptr<BaseComponentWrapper> remove_component(std::size_t index);
 
-
         std::unique_ptr<BaseComponentWrapper> &get_component(std::size_t index);
-
 
         [[nodiscard]] std::size_t size() const;
     };

@@ -25,27 +25,23 @@ namespace winter_rain_ecs
     class Archetype
     {
     private:
-        std::vector<EntityId> entities;
-        std::map<ComponentId, std::unique_ptr<ComponentList>> components;
-        std::string name{};
+        std::vector<EntityId> m_entities;
+        std::map<ComponentId, std::unique_ptr<ComponentList>> m_components;
 
         template <class T>
         void add_component(T component)
         {
             const std::size_t hash = typeid(T).hash_code();
-            if (components.contains(hash))
+            if (m_components.contains(hash))
             {
                 std::unique_ptr<BaseComponentWrapper> comp = std::make_unique<ComponentWrapper<T>>(component);
-                components[hash]->add_component(std::move(comp));
+                m_components[hash]->add_component(std::move(comp));
                 return;
             }
-            // append name
-            name.append(typeid(T).name());
-
             auto list = std::make_unique<ComponentList>();
             std::unique_ptr<BaseComponentWrapper> comp = std::make_unique<ComponentWrapper<T>>(component);
             list->add_component(std::move(comp));
-            components.insert({hash, std::move(list)});
+            m_components.insert({hash, std::move(list)});
         }
 
         template <class... T>
@@ -60,7 +56,7 @@ namespace winter_rain_ecs
         template <typename... T>
         explicit Archetype(const Entity entity, T... components)
         {
-            entities.push_back(entity.id);
+            m_entities.push_back(entity.id);
             add_components<T...>(components...);
         }
 
@@ -71,9 +67,8 @@ namespace winter_rain_ecs
 
         Archetype(Archetype &&archetype) noexcept
         {
-            entities = std::move(archetype.entities);
-            components = std::move(archetype.components);
-            name = std::move(archetype.name);
+            m_entities = std::move(archetype.m_entities);
+            m_components = std::move(archetype.m_components);
         }
 
         // move assignment operator
@@ -81,9 +76,8 @@ namespace winter_rain_ecs
         {
             if (this != &archetype)
             {
-                entities = std::move(archetype.entities);
-                components = std::move(archetype.components);
-                name = std::move(archetype.name);
+                m_entities = std::move(archetype.m_entities);
+                m_components = std::move(archetype.m_components);
             }
             return *this;
         }
@@ -94,7 +88,7 @@ namespace winter_rain_ecs
         bool has_component()
         {
             const std::size_t hash = typeid(U).hash_code();
-            return components.contains(hash);
+            return m_components.contains(hash);
         }
 
         template <class... U>
@@ -106,7 +100,7 @@ namespace winter_rain_ecs
         template <typename... T>
         void add_entity(const Entity entity, T... components)
         {
-            entities.push_back(entity.id);
+            m_entities.push_back(entity.id);
             add_components<T...>(components...);
         }
 
@@ -119,18 +113,18 @@ namespace winter_rain_ecs
         {
             const std::size_t hash = typeid(U).hash_code();
 
-            const auto entity_it = std::ranges::find(entities, entity.id);
-            if (this->has_component<U>() && entity_it != entities.end())
+            const auto entity_it = std::ranges::find(m_entities, entity.id);
+            if (this->has_component<U>() && entity_it != m_entities.end())
             {
                 // find component list
-                const auto it = components.find(hash);
+                const auto it = m_components.find(hash);
                 // find entity in archetype
                 std::println("Removing component with hash: {}", it->first);
-                const auto index = std::distance(entities.begin(), entity_it);
+                const auto index = std::distance(m_entities.begin(), entity_it);
                 it->second->remove_component(index);
                 // now we need to prepare other components to migrate this entity to other archetype
                 std::map<std::size_t, std::unique_ptr<BaseComponentWrapper>> component_to_migrate;
-                for (auto &[key, value] : components)
+                for (auto &[key, value] : m_components)
                 {
                     if (key != hash)
                     {
@@ -138,7 +132,7 @@ namespace winter_rain_ecs
                     }
                 }
                 // remove entity from this archetype
-                entities.erase(entity_it);
+                m_entities.erase(entity_it);
                 // make a tuple with the components to migrate and entity
                 std::tuple<Entity, std::map<std::size_t, std::unique_ptr<BaseComponentWrapper>>> tuple =
                     std::make_tuple(
@@ -170,8 +164,5 @@ namespace winter_rain_ecs
 
         [[nodiscard]] const std::vector<EntityId> &get_entities() const;
 
-        std::string get_name();
-
-        void set_name(const char *name);
     };
 }

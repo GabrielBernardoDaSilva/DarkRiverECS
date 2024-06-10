@@ -66,8 +66,8 @@ namespace winter_rain_ecs {
 
     std::vector<Archetype *> World::create_archetype_ref() {
         std::vector<Archetype *> archetypes_ptr{};
-        archetypes_ptr.reserve(entity_manager.archetypes.size());
-        for (auto &archetype: entity_manager.archetypes) {
+        archetypes_ptr.reserve(entity_manager.m_archetypes.size());
+        for (auto &archetype: entity_manager.m_archetypes) {
             archetypes_ptr.push_back(&archetype);
         }
         return archetypes_ptr;
@@ -75,7 +75,7 @@ namespace winter_rain_ecs {
 
     void World::show_archetypes() const {
         std::println("--------------------Archetypes-------------------");
-        for (auto &archetype: entity_manager.archetypes) {
+        for (auto &archetype: entity_manager.m_archetypes) {
             archetype.list_all_components_hash();
         }
         std::println("------------------------------------------------");
@@ -83,7 +83,7 @@ namespace winter_rain_ecs {
 
     void World::show_entities() const {
         std::println("--------------------Entities-------------------");
-        for (auto &entity: entity_manager.entities) {
+        for (auto &entity: entity_manager.m_entities) {
             std::println("Entity id: {}, Entity Location: {}", entity.id, entity.location);
         }
         std::println("------------------------------------------------");

@@ -24,29 +24,29 @@ namespace winter_rain_ecs
         Entity add_entity(T... components)
         {
             Entity entity{
-                .id = entity_count++,
+                .id = m_entity_count++,
             };
 
             std::vector<std::size_t> component_hashes = {typeid(T).hash_code()...};
             component_hashes.emplace(component_hashes.begin(), typeid(Entity).hash_code());
 
-            auto archetypeFounded = std::ranges::find_if(archetypes, [&](Archetype &archetype)
+            auto archetypeFounded = std::ranges::find_if(m_archetypes, [&](Archetype &archetype)
                                                          { return archetype.has_components_by_hash(component_hashes); });
 
             // found archetype
-            if (archetypeFounded != archetypes.end())
+            if (archetypeFounded != m_archetypes.end())
             {
-                entity.location = std::distance(archetypes.begin(), archetypeFounded);
+                entity.location = std::distance(m_archetypes.begin(), archetypeFounded);
                 archetypeFounded->add_entity(entity, entity, components...);
             }
             else
             {
-                entity.location = archetypes.size();
+                entity.location = m_archetypes.size();
                 Archetype archetype{entity, entity, components...};
-                archetypes.push_back(std::move(archetype));
+                m_archetypes.push_back(std::move(archetype));
             }
 
-            entities.push_back(entity);
+            m_entities.push_back(entity);
 
             return entity;
         };
@@ -54,12 +54,12 @@ namespace winter_rain_ecs
         template <typename T>
         std::expected<Success, ArchetypeError> add_component_to_entity(const Entity entity, T component)
         {
-            auto entity_founded = std::ranges::find_if(entities, [&](const Entity &e)
+            auto entity_founded = std::ranges::find_if(m_entities, [&](const Entity &e)
                                                        { return e.id == entity.id; });
-            if (entity_founded != entities.end())
+            if (entity_founded != m_entities.end())
             {
                 const std::size_t archetype_location = entity_founded->location;
-                Archetype &old_archetype = archetypes[archetype_location];
+                Archetype &old_archetype = m_archetypes[archetype_location];
 
                 if (old_archetype.has_component<T>())
                     return std::unexpected(ArchetypeError::EntityAlreadyHasComponent);
@@ -71,23 +71,23 @@ namespace winter_rain_ecs
                 old_archetype.get_archetype_hash(component_hashes);
                 component_hashes.push_back(typeid(T).hash_code());
 
-                auto archetype_founded = std::ranges::find_if(archetypes, [&](const Archetype &arch)
+                auto archetype_founded = std::ranges::find_if(m_archetypes, [&](const Archetype &arch)
                                                               { return arch.has_components_by_hash(component_hashes); });
 
                 auto &[entity, components] = moved_entity.value();
                 components.insert(std::make_pair(typeid(T).hash_code(), std::make_unique<ComponentWrapper<T>>(std::move(component))));
 
                 // found archetype
-                if (archetype_founded != archetypes.end())
+                if (archetype_founded != m_archetypes.end())
                 {
-                    entity_founded->location = std::distance(archetypes.begin(), archetype_founded);
+                    entity_founded->location = std::distance(m_archetypes.begin(), archetype_founded);
                     archetype_founded->migrate_entity_to_itself(std::move(moved_entity.value()));
                 }
                 else
                 {
-                    entity_founded->location = archetypes.size();
+                    entity_founded->location = m_archetypes.size();
                     Archetype arch{std::move(moved_entity.value())};
-                    archetypes.push_back(std::move(arch));
+                    m_archetypes.push_back(std::move(arch));
                 }
                 //
                 remove_archetype_if_needed(archetype_location);
@@ -100,13 +100,13 @@ namespace winter_rain_ecs
         template <typename T>
         std::expected<Success, ArchetypeError> remove_component_from_entity(const Entity entity)
         {
-            auto entity_founded = std::ranges::find_if(entities, [&](const Entity &e)
+            auto entity_founded = std::ranges::find_if(m_entities, [&](const Entity &e)
                                                        { return e.id == entity.id; });
 
-            if (entity_founded != entities.end())
+            if (entity_founded != m_entities.end())
             {
                 const std::size_t archetype_location = entity_founded->location;
-                Archetype &old_archetype = archetypes[archetype_location];
+                Archetype &old_archetype = m_archetypes[archetype_location];
                 std::println("Removing component {}", typeid(T).hash_code());
                 if (!old_archetype.has_component<T>())
                     return std::unexpected(ArchetypeError::EntityDoesNotHaveComponent);
@@ -120,19 +120,19 @@ namespace winter_rain_ecs
                 std::ranges::for_each(components, [&](auto &component)
                                       { component_hashes.push_back(component.first); });
 
-                auto archetype_founded = std::ranges::find_if(archetypes, [&](const Archetype &archetype)
+                auto archetype_founded = std::ranges::find_if(m_archetypes, [&](const Archetype &archetype)
                                                               { return archetype.has_components_by_hash(component_hashes); });
                 // found archetype
-                if (archetype_founded != archetypes.end())
+                if (archetype_founded != m_archetypes.end())
                 {
-                    entity_founded->location = std::distance(archetypes.begin(), archetype_founded);
+                    entity_founded->location = std::distance(m_archetypes.begin(), archetype_founded);
                     archetype_founded->migrate_entity_to_itself(std::move(moved_entity.value()));
                 }
                 else
                 {
-                    entity_founded->location = archetypes.size();
+                    entity_founded->location = m_archetypes.size();
                     Archetype archetype{std::move(moved_entity.value())};
-                    archetypes.push_back(std::move(archetype));
+                    m_archetypes.push_back(std::move(archetype));
                 }
                 remove_archetype_if_needed(archetype_location);
                 return Success{};
@@ -143,15 +143,15 @@ namespace winter_rain_ecs
 
         [[nodiscard]] std::size_t get_archetype_size() const
         {
-            return archetypes.size();
+            return m_archetypes.size();
         }
 
         std::expected<Success, ArchetypeError> remove_entity(Entity entity);
 
     private:
-        std::vector<Archetype> archetypes{};
-        std::vector<Entity> entities{};
-        std::size_t entity_count{0};
+        std::vector<Archetype> m_archetypes{};
+        std::vector<Entity> m_entities{};
+        std::size_t m_entity_count{0};
 
         void remove_archetype_if_needed(const std::size_t archetype_location);
     };

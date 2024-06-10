@@ -39,7 +39,7 @@ namespace winter_rain_ecs
     class Query<With<WithComponent...>, Without<WithoutComponents...>> final : public QueryBase
     {
     public:
-        explicit Query(Accessor &accessor) : accessor(accessor) {
+        explicit Query(Accessor &accessor) : m_accessor(accessor) {
                                              };
 
         ~Query() override = default;
@@ -53,12 +53,12 @@ namespace winter_rain_ecs
 
         inline constexpr void execute() override
         {
-            for (Archetype *archetype : archetypes)
+            for (Archetype *archetype : m_archetypes)
             {
                 auto &components = archetype->get_components();
                 auto &entities = archetype->get_entities();
 
-                const bool is_archetype_components_bigger = with_components.size() > components.size();
+                const bool is_archetype_components_bigger = m_with_components.size() > components.size();
 
                 const bool is_archetype_empty = archetype->is_empty();
 
@@ -66,17 +66,17 @@ namespace winter_rain_ecs
                                                                     [&](const std::size_t key)
                                                                     {
                                                                         return std::ranges::find(
-                                                                                   with_components.begin(),
-                                                                                   with_components.end(),
-                                                                                   key) != with_components.end();
+                                                                                   m_with_components.begin(),
+                                                                                   m_with_components.end(),
+                                                                                   key) != m_with_components.end();
                                                                     });
                 const bool is_without_components = std::ranges::any_of(components | std::views::keys,
                                                                        [&](const std::size_t key)
                                                                        {
                                                                            return std::ranges::find(
-                                                                                      without_components.begin(),
-                                                                                      without_components.end(),
-                                                                                      key) != without_components.end();
+                                                                                      m_without_components.begin(),
+                                                                                      m_without_components.end(),
+                                                                                      key) != m_without_components.end();
                                                                        });
 
                 if (is_with_components && !is_without_components && !is_archetype_components_bigger && !is_archetype_empty)
@@ -90,7 +90,7 @@ namespace winter_rain_ecs
                                                                                          i)...);
                             std::tuple<WithComponent...> tuple = std::tuple<WithComponent...>{std::get<WithComponent>(component_tuple)...};
 
-                            result.push_back(tuple);
+                            m_result.push_back(tuple);
                         }
                     }
                 }
@@ -99,38 +99,38 @@ namespace winter_rain_ecs
 
         inline constexpr const std::optional<std::tuple<WithComponent...>> &first()
         {
-            if (archetypes.size() != accessor.get_archetype_size())
-                archetypes = accessor.get_archetypes();
+            if (m_archetypes.size() != m_accessor.get_archetype_size())
+                m_archetypes = m_accessor.get_archetypes();
             execute();
-            if (result.empty())
+            if (m_result.empty())
                 return std::nullopt;
-            return result.front();
+            return m_result.front();
         }
 
         inline constexpr const std::optional<std::tuple<WithComponent...>> &last()
         {
-            if (archetypes.size() != accessor.get_archetype_size())
-                archetypes = accessor.get_archetypes();
+            if (m_archetypes.size() != m_accessor.get_archetype_size())
+                m_archetypes = m_accessor.get_archetypes();
             execute();
-            if (result.empty())
+            if (m_result.empty())
                 return std::nullopt;
-            return result.back();
+            return m_result.back();
         }
 
         inline constexpr const std::vector<std::tuple<WithComponent...>> &all()
         {
-            if (archetypes.size() != accessor.get_archetype_size())
-                archetypes = accessor.get_archetypes();
+            if (m_archetypes.size() != m_accessor.get_archetype_size())
+                m_archetypes = m_accessor.get_archetypes();
             execute();
-            return result;
+            return m_result;
         }
 
     private:
-        std::vector<Archetype *> archetypes{};
-        std::vector<std::size_t> with_components{typeid(WithComponent).hash_code()...};
-        std::vector<std::size_t> without_components{typeid(WithoutComponents).hash_code()...};
-        std::vector<std::tuple<WithComponent...>> result{};
-        Accessor &accessor;
+        std::vector<Archetype *> m_archetypes{};
+        std::vector<std::size_t> m_with_components{typeid(WithComponent).hash_code()...};
+        std::vector<std::size_t> m_without_components{typeid(WithoutComponents).hash_code()...};
+        std::vector<std::tuple<WithComponent...>> m_result{};
+        Accessor &m_accessor;
     };
 
 }

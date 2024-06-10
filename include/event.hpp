@@ -52,12 +52,12 @@ namespace winter_rain_ecs
         template <typename Ev>
         void emit(Ev event)
         {
-            if (const auto event_list_iter = event_lists.find(typeid(Ev).hash_code()); event_list_iter == event_lists.end())
+            if (const auto event_list_iter = m_event_lists.find(typeid(Ev).hash_code()); event_list_iter == m_event_lists.end())
             {
-                event_lists[typeid(Ev).hash_code()] = std::make_any<EventList<Ev>>(m_accessor);
+                m_event_lists[typeid(Ev).hash_code()] = std::make_any<EventList<Ev>>(m_accessor);
             }
 
-            auto &event_list_any = event_lists[typeid(Ev).hash_code()];
+            auto &event_list_any = m_event_lists[typeid(Ev).hash_code()];
             if (auto event_list = std::any_cast<EventList<Ev>>(&event_list_any))
             {
                 event_list->emit(std::move(event));
@@ -67,12 +67,12 @@ namespace winter_rain_ecs
         template <typename Ev>
         void subscribe(std::function<void(World &, Ev)> subscriber)
         {
-            if (const auto event_list_iter = event_lists.find(typeid(Ev).hash_code()); event_list_iter == event_lists.end())
+            if (const auto event_list_iter = m_event_lists.find(typeid(Ev).hash_code()); event_list_iter == m_event_lists.end())
             {
-                event_lists[typeid(Ev).hash_code()] = std::make_any<EventList<Ev>>(m_accessor);
+                m_event_lists[typeid(Ev).hash_code()] = std::make_any<EventList<Ev>>(m_accessor);
             }
 
-            auto &event_list_any = event_lists[typeid(Ev).hash_code()];
+            auto &event_list_any = m_event_lists[typeid(Ev).hash_code()];
             if (auto event_list = std::any_cast<EventList<Ev>>(&event_list_any))
             {
                 event_list->subscribe(std::move(subscriber));
@@ -82,9 +82,9 @@ namespace winter_rain_ecs
         template <typename Ev>
         void unsubscribe(const std::function<void(World &, Ev)> &subscriber)
         {
-            if (const auto event_list_iter = event_lists.find(typeid(Ev).hash_code()); event_list_iter != event_lists.end())
+            if (const auto event_list_iter = m_event_lists.find(typeid(Ev).hash_code()); event_list_iter != m_event_lists.end())
             {
-                auto &event_list_any = event_lists[typeid(Ev).hash_code()];
+                auto &event_list_any = m_event_lists[typeid(Ev).hash_code()];
                 if (auto event_list = std::any_cast<EventList<Ev>>(&event_list_any))
                 {
                     event_list->unsubscribe(subscriber);
@@ -93,7 +93,7 @@ namespace winter_rain_ecs
         }
 
     private:
-        std::unordered_map<std::size_t, std::any> event_lists{};
+        std::unordered_map<std::size_t, std::any> m_event_lists{};
         Accessor& m_accessor;
     };
 }
