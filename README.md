@@ -1,6 +1,7 @@
 # Dark River ECS
-
-![alt text](https://github.com/GabrielBernardoDaSilva/forged_in_lost_lands_ecs/blob/main/darkriver.png)
+<p align="center">
+      <img src="https://github.com/GabrielBernardoDaSilva/forged_in_lost_lands_ecs/blob/main/darkriver.png" alt="DARKRIVER" />
+</p>
 
 [badge.language]: https://img.shields.io/badge/language-C%2B%2B23-red
 
