@@ -94,6 +94,6 @@ namespace winter_rain_ecs
 
     private:
         std::unordered_map<std::size_t, std::any> m_event_lists{};
-        Accessor& m_accessor;
+        Accessor &m_accessor;
     };
 }

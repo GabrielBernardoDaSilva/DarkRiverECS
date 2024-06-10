@@ -22,7 +22,8 @@ namespace winter_rain_ecs
     bool Archetype::has_components_by_hash(const std::vector<std::size_t> &hashes) const
     {
         return std::ranges::all_of(m_components | std::views::keys, [&hashes](const std::size_t hash)
-                                   { return std::ranges::find(hashes, hash) != hashes.end(); }) && hashes.size() == m_components.size();
+                                   { return std::ranges::find(hashes, hash) != hashes.end(); }) &&
+               hashes.size() == m_components.size();
     }
     void Archetype::get_archetype_hash(std::vector<std::size_t> &hashes)
     {

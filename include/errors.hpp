@@ -16,5 +16,7 @@ namespace winter_rain_ecs
 		TaskNotFound
 	};
 
-	struct Success{};
+	struct Success
+	{
+	};
 }

@@ -85,7 +85,7 @@ namespace winter_rain_ecs
             {
                 m_executor(get_argument<Args>()...);
             }
-            catch (const std::invalid_argument& e)
+            catch (const std::invalid_argument &e)
             {
                 throw e;
             }

@@ -15,7 +15,7 @@ namespace winter_rain_ecs
                 executor->execute();
             }
         }
-        catch (const std::invalid_argument& e)
+        catch (const std::invalid_argument &e)
         {
             throw e;
         }
@@ -30,7 +30,7 @@ namespace winter_rain_ecs
                 executor->execute();
             }
         }
-        catch (const std::invalid_argument& e)
+        catch (const std::invalid_argument &e)
         {
             throw e;
         }
@@ -44,7 +44,7 @@ namespace winter_rain_ecs
                 executor->execute();
             }
         }
-        catch (const std::invalid_argument& e)
+        catch (const std::invalid_argument &e)
         {
             throw e;
         }

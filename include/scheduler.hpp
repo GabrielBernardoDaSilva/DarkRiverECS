@@ -9,22 +9,27 @@
 #include <map>
 #include <vector>
 
-namespace winter_rain_ecs {
-    struct WaitAmountOfSeconds {
+namespace winter_rain_ecs
+{
+    struct WaitAmountOfSeconds
+    {
         float m_seconds;
     };
 
-    class TaskScheduler {
+    class TaskScheduler
+    {
     public:
-        template<typename... Args>
+        template <typename... Args>
         explicit TaskScheduler(std::function<generator<WaitAmountOfSeconds>(Args...)> task, Args... args) : m_task_gen(
-            task(args...)) {
+                                                                                                                task(args...))
+        {
             m_is_running = true;
         }
 
-        template<typename... Args>
+        template <typename... Args>
         explicit TaskScheduler(generator<WaitAmountOfSeconds> (*task)(Args...),
-                               Args... args) : m_task_gen(task(args...)) {
+                               Args... args) : m_task_gen(task(args...))
+        {
             m_is_running = true;
         }
 
@@ -41,21 +46,24 @@ namespace winter_rain_ecs {
         bool m_is_running = false;
         float m_amount_of_seconds_to_wait = 0.0f;
         bool m_is_done = false;
-        std::optional<generator<WaitAmountOfSeconds> > m_task_gen;
+        std::optional<generator<WaitAmountOfSeconds>> m_task_gen;
     };
 
-    class TaskId {
+    class TaskId
+    {
         friend class TaskManager;
 
     public:
-        explicit TaskId(std::size_t id) : m_id{id} {
+        explicit TaskId(std::size_t id) : m_id{id}
+        {
         }
 
     private:
         std::size_t m_id{0};
     };
 
-    class TaskManager {
+    class TaskManager
+    {
     public:
         TaskManager() = default;
 

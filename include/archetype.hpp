@@ -163,6 +163,5 @@ namespace winter_rain_ecs
         std::map<std::size_t, std::unique_ptr<ComponentList>> &get_components();
 
         [[nodiscard]] const std::vector<EntityId> &get_entities() const;
-
     };
 }

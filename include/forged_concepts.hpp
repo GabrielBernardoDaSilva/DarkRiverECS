@@ -17,7 +17,6 @@ namespace winter_rain_ecs
     class TaskManager;
     class ExecutorManager;
 
-
     template <typename T>
     concept validation_query_types = std::is_reference_v<T>;
 
