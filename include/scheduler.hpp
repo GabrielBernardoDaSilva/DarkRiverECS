@@ -11,7 +11,7 @@
 
 namespace winter_rain_ecs {
     struct WaitAmountOfSeconds {
-        float seconds;
+        float m_seconds;
     };
 
     class TaskScheduler {
