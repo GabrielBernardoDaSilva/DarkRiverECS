@@ -17,7 +17,7 @@ namespace darkriver
     public:
         explicit Accessor(World &world) : m_world(world) {}
 
-        [[nodiscard]] std::vector<Archetype *> get_archetypes() const;
+        [[nodiscard]] std::vector<Archetype>& get_archetypes() const;
         [[nodiscard]] std::size_t get_archetype_size() const;
 
         [[nodiscard]] EventManager &get_event_manager() const;

@@ -4,7 +4,7 @@
 
 namespace darkriver
 {
-    std::vector<Archetype *> Accessor::get_archetypes() const
+    std::vector<Archetype>& Accessor::get_archetypes() const
     {
         return m_world.create_archetype_ref();
     }

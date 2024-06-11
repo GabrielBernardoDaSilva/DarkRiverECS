@@ -186,7 +186,7 @@ namespace darkriver
         TaskManager &get_task_manager();
 #pragma endregion
 
-        std::vector<Archetype *> create_archetype_ref();
+        std::vector<Archetype>& create_archetype_ref();
 
         void show_archetypes() const;
 

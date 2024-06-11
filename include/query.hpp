@@ -39,7 +39,7 @@ namespace darkriver
     class Query<With<WithComponent...>, Without<WithoutComponents...>> final : public QueryBase
     {
     public:
-        explicit Query(Accessor &accessor) : m_accessor(accessor) {
+        explicit Query(Accessor &accessor) : m_accessor(accessor), m_archetypes(accessor.get_archetypes()) {
                                              };
 
         ~Query() override = default;
@@ -53,14 +53,14 @@ namespace darkriver
 
         inline constexpr void execute() override
         {
-            for (Archetype *archetype : m_archetypes)
+            for (Archetype &archetype : m_archetypes)
             {
-                auto &components = archetype->get_components();
-                auto &entities = archetype->get_entities();
+                auto &components = archetype.get_components();
+                auto &entities = archetype.get_entities();
 
                 const bool is_archetype_components_bigger = m_with_components.size() > components.size();
 
-                const bool is_archetype_empty = archetype->is_empty();
+                const bool is_archetype_empty = archetype.is_empty();
 
                 const bool is_with_components = std::ranges::any_of(components | std::views::keys,
                                                                     [&](const std::size_t key)
@@ -99,8 +99,6 @@ namespace darkriver
 
         inline constexpr const std::optional<std::tuple<WithComponent...>> &first()
         {
-            if (m_archetypes.size() != m_accessor.get_archetype_size())
-                m_archetypes = m_accessor.get_archetypes();
             execute();
             if (m_result.empty())
                 return std::nullopt;
@@ -109,8 +107,6 @@ namespace darkriver
 
         inline constexpr const std::optional<std::tuple<WithComponent...>> &last()
         {
-            if (m_archetypes.size() != m_accessor.get_archetype_size())
-                m_archetypes = m_accessor.get_archetypes();
             execute();
             if (m_result.empty())
                 return std::nullopt;
@@ -119,14 +115,12 @@ namespace darkriver
 
         inline constexpr const std::vector<std::tuple<WithComponent...>> &all()
         {
-            if (m_archetypes.size() != m_accessor.get_archetype_size())
-                m_archetypes = m_accessor.get_archetypes();
             execute();
             return m_result;
         }
 
     private:
-        std::vector<Archetype *> m_archetypes{};
+        std::vector<Archetype> &m_archetypes;
         std::vector<std::size_t> m_with_components{typeid(WithComponent).hash_code()...};
         std::vector<std::size_t> m_without_components{typeid(WithoutComponents).hash_code()...};
         std::vector<std::tuple<WithComponent...>> m_result{};

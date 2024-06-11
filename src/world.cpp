@@ -82,15 +82,9 @@ namespace darkriver
         return m_task_manager;
     }
 
-    std::vector<Archetype *> World::create_archetype_ref()
+    std::vector<Archetype>& World::create_archetype_ref()
     {
-        std::vector<Archetype *> archetypes_ptr{};
-        archetypes_ptr.reserve(m_entity_manager.m_archetypes.size());
-        for (auto &archetype : m_entity_manager.m_archetypes)
-        {
-            archetypes_ptr.push_back(&archetype);
-        }
-        return archetypes_ptr;
+        return m_entity_manager.m_archetypes;
     }
 
     void World::show_archetypes() const
