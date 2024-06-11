@@ -87,6 +87,65 @@ void p(std::function<void()> f)
 
 int main()
 {
-   
+    Position pos = {
+        .x = 10.0f,
+        .y = 20.0f};
+    Velocity vel = {
+        .x = 5.0f,
+        .y = 5.0f};
+
+    Position pos2 = {
+        .x = 12.0f,
+        .y = 22.0f};
+
+    Velocity vel2 = {
+        .x = 7.0f,
+        .y = 7.0f};
+
+    Position pos3 = {
+        .x = 13.0f,
+        .y = 23.0f};
+    Health health = {
+        .health = 100};
+
+    World world;
+    world.add_plugin<PluginTest>();
+    world.build_plugins();
+    Entity e = world.add_entity(pos, vel);
+    Entity e2 = world.add_entity(pos2, vel2);
+    Entity e3 = world.add_entity(pos3, health);
+
+    world.add_component_to_entity(e, Health{.health = 300});
+    world.remove_component_from_entity<Health>(e);
+
+
+    auto pos_query = [](Query<With<Position &>> query)
+    {
+        for (auto &[pos] : query.all())
+        {
+            std::println("Print Lambda Position: x: {} y: {}", pos.x, pos.y);
+        }
+    };
+
+    world.add_executors(ExecutorType::Startup, modify_pos, read_position);
+    world.add_executors(ExecutorType::Startup, pos_query);
+
+    world.run();
+    world.emit(Collision{.collided = true});
+
+    world.add_task(generate_numbers, 10);
+
+
+    auto f = []()
+    {
+        std::println("Hello");
+    };
+    p(f);
+
+    std::println("Run");
+    while (true)
+    {
+        world.run_tasks(0.16f);
+    }
     return 0;
 }

@@ -59,7 +59,7 @@ generator<WaitAmountOfSeconds> generate_numbers(int i)
 {
     std::println("generate_numbers starting");
     co_yield WaitAmountOfSeconds{
-        .seconds = 100000.0f};
+        .m_seconds = 1000.0f};
     std::println("generate_numbers ending");
 
     std::println("i: {}", i);
@@ -71,7 +71,7 @@ struct Collision
     bool collided;
 };
 
-void check_collision(World& world, Collision collision)
+void check_collision(World &world, Collision collision)
 {
     std::println("Collision: {}", collision.collided);
 }
@@ -110,7 +110,7 @@ class PluginTest : public Plugin
 {
     virtual void build(World &world) override
     {
-        world.subscribe<Collision>([&](Collision collision)
+        world.subscribe<Collision>([&](World &world, Collision collision)
                                    { std::println("PluginTest Collision"); });
         std::println("PluginTest on_start");
     }
@@ -144,15 +144,15 @@ int main()
     Health health = {
         .health = 100};
 
-    World lands;
-    lands.add_plugin<PluginTest>();
-    lands.build_plugins();
-    Entity e = lands.add_entity(pos, vel);
-    Entity e2 = lands.add_entity(pos2, vel2);
-    Entity e3 = lands.add_entity(pos3, health);
+    World world;
+    world.add_plugin<PluginTest>();
+    world.build_plugins();
+    Entity e = world.add_entity(pos, vel);
+    Entity e2 = world.add_entity(pos2, vel2);
+    Entity e3 = world.add_entity(pos3, health);
 
-    lands.add_component_to_entity(e, Health{.health = 300});
-    lands.remove_component_from_entity<Health>(e);
+    world.add_component_to_entity(e, Health{.health = 300});
+    world.remove_component_from_entity<Health>(e);
 
 
     auto pos_query = [](Query<With<Position &>> query)
@@ -163,13 +163,13 @@ int main()
         }
     };
 
-    lands.add_executors(ExecutorType::Startup, modify_pos, read_position);
-    lands.add_executors(ExecutorType::Startup, pos_query);
+    world.add_executors(ExecutorType::Startup, modify_pos, read_position);
+    world.add_executors(ExecutorType::Startup, pos_query);
 
-    lands.run();
-    lands.emit(Collision{.collided = true});
+    world.run();
+    world.emit(Collision{.collided = true});
 
-    lands.add_task(generate_numbers, 10);
+    world.add_task(generate_numbers, 10);
 
 
     auto f = []()
@@ -181,9 +181,8 @@ int main()
     std::println("Run");
     while (true)
     {
-        lands.run_tasks(0.16f);
+        world.run_tasks(0.16f);
     }
-
     return 0;
 }
 
