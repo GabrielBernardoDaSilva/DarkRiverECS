@@ -35,6 +35,11 @@ namespace darkriver
         World() = default;
 
         ~World() = default;
+#pragma region state_handler
+        void init_executors();
+        void update_executors();
+        void shutdown_executors();
+#pragma endregion
 
         /// archetypes
 #pragma region archetypes
@@ -186,7 +191,7 @@ namespace darkriver
         TaskManager &get_task_manager();
 #pragma endregion
 
-        std::vector<Archetype>& create_archetype_ref();
+        std::vector<Archetype> &create_archetype_ref();
 
         void show_archetypes() const;
 

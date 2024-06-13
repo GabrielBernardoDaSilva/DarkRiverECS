@@ -4,6 +4,22 @@
 
 namespace darkriver
 {
+
+    void World::init_executors()
+    {
+        m_executor_manager.startup_executor();
+    }
+
+    void World::update_executors()
+    {
+        m_executor_manager.execute();
+    }
+
+    void World::shutdown_executors()
+    {
+        m_executor_manager.shutdown_executor();
+    }
+
     EntityManager &World::get_entity_manager()
     {
         return m_entity_manager;
@@ -82,7 +98,7 @@ namespace darkriver
         return m_task_manager;
     }
 
-    std::vector<Archetype>& World::create_archetype_ref()
+    std::vector<Archetype> &World::create_archetype_ref()
     {
         return m_entity_manager.m_archetypes;
     }
