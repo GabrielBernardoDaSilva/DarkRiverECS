@@ -97,7 +97,7 @@ namespace darkriver
             }
         }
 
-        inline constexpr const std::optional<std::tuple<WithComponent...>> &first()
+        inline constexpr const std::optional<std::tuple<WithComponent...>> first()
         {
             execute();
             if (m_result.empty())
@@ -105,7 +105,7 @@ namespace darkriver
             return m_result.front();
         }
 
-        inline constexpr const std::optional<std::tuple<WithComponent...>> &last()
+        inline constexpr const std::optional<std::tuple<WithComponent...>> last()
         {
             execute();
             if (m_result.empty())
