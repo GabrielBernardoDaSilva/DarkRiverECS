@@ -21,7 +21,7 @@ namespace darkriver
         ~EntityManager() = default;
 
         template <typename... T>
-        Entity add_entity(T&&... components)
+        Entity add_entity(T... components)
         {
             Entity entity{
                 .id = m_entity_count++,
@@ -37,12 +37,12 @@ namespace darkriver
             if (archetypeFounded != m_archetypes.end())
             {
                 entity.location = std::distance(m_archetypes.begin(), archetypeFounded);
-                archetypeFounded->add_entity(entity, entity, std::forward<T>(components)...);
+                archetypeFounded->add_entity(entity, entity, (components)...);
             }
             else
             {
                 entity.location = m_archetypes.size();
-                Archetype archetype{entity, entity, std::forward<T>(components)...};
+                Archetype archetype{entity, entity, (components)...};
                 m_archetypes.push_back(std::move(archetype));
             }
 

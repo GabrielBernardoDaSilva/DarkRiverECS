@@ -29,18 +29,18 @@ namespace darkriver
         std::map<ComponentId, std::unique_ptr<ComponentList>> m_components;
 
         template <class T>
-        void add_component(T &&component)
+        void add_component(T component)
         {
             const std::size_t hash = typeid(T).hash_code();
             if (m_components.contains(hash))
             {
 
-                std::unique_ptr<BaseComponentWrapper> comp = std::make_unique<ComponentWrapper<T>>(std::forward<T>(component));
+                std::unique_ptr<BaseComponentWrapper> comp = std::make_unique<ComponentWrapper<T>>(component);
                 m_components[hash]->add_component(std::move(comp));
                 return;
             }
             auto list = std::make_unique<ComponentList>();
-            std::unique_ptr<BaseComponentWrapper> comp = std::make_unique<ComponentWrapper<T>>(std::forward<T>(component));
+            std::unique_ptr<BaseComponentWrapper> comp = std::make_unique<ComponentWrapper<T>>(component);
             list->add_component(std::move(comp));
             m_components.insert({hash, std::move(list)});
         }
@@ -55,7 +55,7 @@ namespace darkriver
         Archetype() = default;
 
         template <typename... T>
-        explicit Archetype(const Entity entity, T &&...components)
+        explicit Archetype(const Entity entity, T ...components)
         {
             m_entities.push_back(entity.id);
             add_components<T...>(std::forward<T>(components)...);

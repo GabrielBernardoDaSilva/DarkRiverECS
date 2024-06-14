@@ -17,7 +17,7 @@ namespace darkriver
     template <typename T>
     struct ComponentWrapper final : public BaseComponentWrapper
     {
-        explicit ComponentWrapper(T &&component) : m_component(std::forward<T>(component))
+        explicit ComponentWrapper(T component) : m_component(component)
         {
         }
 
