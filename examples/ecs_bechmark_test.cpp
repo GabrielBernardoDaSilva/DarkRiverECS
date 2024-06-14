@@ -63,6 +63,6 @@ int main()
     std::chrono::duration<double> elapsed = end - start;
     std::println("Elapsed time: {}", elapsed.count());
     // 2 minutes and 24 seconds Debug
-    // 2 minutes and 07 seconds Release
+    // 2 minutes and 05 seconds Release
     return 0;
 }
