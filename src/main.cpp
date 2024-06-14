@@ -107,8 +107,23 @@ void p(std::function<void()> f)
     f();
 }
 
+struct Timer
+{
+    float time;
+};
+
 int main()
 {
+
+    Timer timer {0.0f};
+
+    auto rm = ResourcesManager{};
+    rm.add(timer);
+
+    auto t = rm.get<Timer>();
+    
+    
+
     Position pos = {
         .x = 10.0f,
         .y = 20.0f};
