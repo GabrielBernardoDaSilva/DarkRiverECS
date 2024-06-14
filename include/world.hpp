@@ -47,10 +47,10 @@ namespace darkriver
         EntityManager &get_entity_manager();
 
         template <typename... T>
-        Entity add_entity(T&&... components)
+        World& add_entity(T&&... components)
         {
             auto entity = m_entity_manager.add_entity(std::forward<T>(components)...);
-            return entity;
+            return *this;
         };
 
         template <typename T>
@@ -73,28 +73,32 @@ namespace darkriver
         /// executors
 
         template <req_system_args... Args>
-        void add_executor(ExecutorType executor_type, std::function<void(Args...)> system)
+        World& add_executor(ExecutorType executor_type, std::function<void(Args...)> system)
         {
             m_executor_manager.add_executor(executor_type, system, m_accessor);
+            return *this;
         }
 
         template <req_system_args... Args>
-        void add_executor(ExecutorType executor_type, void (*system)(Args...))
+        World& add_executor(ExecutorType executor_type, void (*system)(Args...))
         {
             m_executor_manager.add_executor(executor_type, system, m_accessor);
+            return *this;
         }
 
         template <function_pointer Lambda>
-        void add_executor(ExecutorType executor_type, Lambda &&lambda)
+        World& add_executor(ExecutorType executor_type, Lambda &&lambda)
         {
             std::function func{lambda};
             m_executor_manager.add_executor(executor_type, func, m_accessor);
+            return *this;
         }
 
         template <function_pointer... Executors>
-        void add_executors(ExecutorType execute_type, Executors &&...executors)
+        World& add_executors(ExecutorType execute_type, Executors &&...executors)
         {
             (add_executor(execute_type, executors), ...);
+            return *this;
         }
 
         template <typename WithComponents, typename WithoutComponents>
@@ -154,9 +158,10 @@ namespace darkriver
 #pragma region plugins
         // plugins
         template <req_plugin T>
-        void add_plugin()
+        World& add_plugin()
         {
             m_plugins.push_back(std::make_unique<T>());
+            return *this;
         }
 
         void build_plugins();
