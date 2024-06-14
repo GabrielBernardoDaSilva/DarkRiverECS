@@ -40,7 +40,7 @@ void check_collision(World &world, Collision collision)
     std::println("Collision: {}", collision.collided);
 }
 
-void modify_pos(Query<With<const Entity &, Position &, Velocity &>> query, Query<With<Position &>, Without<Velocity &>> q2,
+void modify_pos(Query<With<Entity &, Position &, Velocity &>> query, Query<With<Position &>, Without<Velocity &>> q2,
                 EventManager &event_manager, EntityManager &entity_manager)
 {
     entity_manager.add_entity(Position{.x = 200.0f, .y = 200.0f}, Velocity{.x = 200.0f, .y = 200.0f});
