@@ -47,16 +47,16 @@ namespace darkriver
         EntityManager &get_entity_manager();
 
         template <typename... T>
-        Entity add_entity(T... components)
+        Entity add_entity(T&&... components)
         {
             auto entity = m_entity_manager.add_entity(std::forward<T>(components)...);
             return entity;
         };
 
         template <typename T>
-        std::expected<Success, ArchetypeError> add_component_to_entity(Entity entity, T component)
+        std::expected<Success, ArchetypeError> add_component_to_entity(Entity entity, T&& component)
         {
-            return m_entity_manager.add_component_to_entity<T>(entity, component);
+            return m_entity_manager.add_component_to_entity<T>(entity, std::move(component));
         }
 
         template <typename T>

@@ -17,6 +17,27 @@ struct Velocity
 struct Health
 {
     int health;
+
+    Health(int health) : health(health)
+    {
+        std::println("Constructor");
+    }
+
+    Health(const Health &other) = delete;
+    Health(Health &&other) noexcept : health(std::move(other.health))
+    {
+        std::println("Move Constructor");
+    }
+
+    Health &operator=(const Health &other) = delete;
+   
+
+    Health &operator=(Health &&other) noexcept
+    {
+        health = std::move(other.health);
+        std::println("Move Assignment");
+        return *this;
+    }
 };
 
 generator<WaitAmountOfSeconds> generate_numbers(int i)
@@ -106,18 +127,17 @@ int main()
         .x = 13.0f,
         .y = 23.0f};
     Health health = {
-        .health = 100};
+        100};
 
     World world;
     world.add_plugin<PluginTest>();
     world.build_plugins();
     Entity e = world.add_entity(pos, vel);
     Entity e2 = world.add_entity(pos2, vel2);
-    Entity e3 = world.add_entity(pos3, health);
+    Entity e3 = world.add_entity(pos3, std::move(health));
 
-    world.add_component_to_entity(e, Health{.health = 300});
+    world.add_component_to_entity(e, Health{300});
     world.remove_component_from_entity<Health>(e);
-
 
     auto pos_query = [](Query<With<Position &>> query)
     {
@@ -134,7 +154,6 @@ int main()
     world.emit(Collision{.collided = true});
 
     world.add_task(generate_numbers, 10);
-
 
     auto f = []()
     {

@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <memory>
-#include <cstddef>
+#include <cstddef> 
 
 namespace darkriver
 {
@@ -17,7 +17,7 @@ namespace darkriver
     template <typename T>
     struct ComponentWrapper final : public BaseComponentWrapper
     {
-        explicit ComponentWrapper(T component) : m_component(component)
+        explicit ComponentWrapper(T&& component) : m_component(std::move(component))
         {
         }
 

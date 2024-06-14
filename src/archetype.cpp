@@ -1,6 +1,7 @@
 #include "archetype.hpp"
 
 #include <ranges>
+#include <print>
 
 namespace darkriver
 {

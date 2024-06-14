@@ -37,12 +37,12 @@ namespace darkriver
             if (archetypeFounded != m_archetypes.end())
             {
                 entity.location = std::distance(m_archetypes.begin(), archetypeFounded);
-                archetypeFounded->add_entity(entity, entity, (components)...);
+                archetypeFounded->add_entity(entity, entity, std::forward<T>(components)...);
             }
             else
             {
                 entity.location = m_archetypes.size();
-                Archetype archetype{entity, entity, (components)...};
+                Archetype archetype{entity, entity,  std::forward<T>(components)...};
                 m_archetypes.push_back(std::move(archetype));
             }
 
