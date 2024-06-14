@@ -11,7 +11,7 @@
 
 namespace darkriver
 {
-    struct WaitAmountOfMilleSeconds
+    struct WaitAmountOfSeconds
     {
         float m_mille_seconds;
     };
@@ -20,14 +20,14 @@ namespace darkriver
     {
     public:
         template <typename... Args>
-        explicit TaskScheduler(std::function<generator<WaitAmountOfMilleSeconds>(Args...)> task, Args... args) : m_task_gen(
+        explicit TaskScheduler(std::function<generator<WaitAmountOfSeconds>(Args...)> task, Args... args) : m_task_gen(
                                                                                                                 task(args...))
         {
             m_is_running = true;
         }
 
         template <typename... Args>
-        explicit TaskScheduler(generator<WaitAmountOfMilleSeconds> (*task)(Args...),
+        explicit TaskScheduler(generator<WaitAmountOfSeconds> (*task)(Args...),
                                Args... args) : m_task_gen(task(args...))
         {
             m_is_running = true;
@@ -46,7 +46,7 @@ namespace darkriver
         bool m_is_running = false;
         float m_amount_of_seconds_to_wait = 0.0f;
         bool m_is_done = false;
-        std::optional<generator<WaitAmountOfMilleSeconds>> m_task_gen;
+        std::optional<generator<WaitAmountOfSeconds>> m_task_gen;
     };
 
     class TaskId

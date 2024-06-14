@@ -41,10 +41,10 @@ struct Health
     }
 };
 
-generator<WaitAmountOfMilleSeconds> generate_numbers(World *world, int i)
+generator<WaitAmountOfSeconds> generate_numbers(World *world, int i)
 {
     std::println("generate_numbers starting");
-    co_yield WaitAmountOfMilleSeconds{
+    co_yield WaitAmountOfSeconds{
         10.0f};
     std::println("generate_numbers ending");
 
