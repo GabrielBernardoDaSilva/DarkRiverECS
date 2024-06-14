@@ -7,6 +7,7 @@ namespace darkriver
 
     void World::init_executors()
     {
+        build_plugins();
         m_executor_manager.startup_executor();
     }
 
