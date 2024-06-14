@@ -26,7 +26,7 @@ namespace darkriver
             if (m_amount_of_seconds_to_wait <= 0.0f)
             {
                 // transform to seconds
-                m_amount_of_seconds_to_wait = m_task_gen.value()().m_seconds * 1000;
+                m_amount_of_seconds_to_wait = m_task_gen.value()().m_mille_seconds;
             }
             else if (m_amount_of_seconds_to_wait > 0.0f)
             {

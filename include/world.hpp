@@ -165,13 +165,13 @@ namespace darkriver
 #pragma region tasks
         // tasks
         template <typename... Args>
-        TaskId add_task(std::function<generator<WaitAmountOfSeconds>(Args...)> task, Args... args)
+        TaskId add_task(std::function<generator<WaitAmountOfMilleSeconds>(Args...)> task, Args... args)
         {
             return m_task_manager.add_task(TaskScheduler(task, args...));
         }
 
         template <typename... Args>
-        TaskId add_task(generator<WaitAmountOfSeconds> (*task)(Args...), Args... args)
+        TaskId add_task(generator<WaitAmountOfMilleSeconds> (*task)(Args...), Args... args)
         {
             return m_task_manager.add_task(TaskScheduler(task, args...));
         }

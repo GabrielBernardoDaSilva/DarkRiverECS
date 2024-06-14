@@ -55,10 +55,10 @@ struct Health
     int health;
 };
 
-generator<WaitAmountOfSeconds> generate_numbers(int i)
+generator<WaitAmountOfMilleSeconds> generate_numbers(int i)
 {
     std::println("generate_numbers starting");
-    co_yield WaitAmountOfSeconds{
+    co_yield WaitAmountOfMilleSeconds{
         .m_seconds = 1000.0f};
     std::println("generate_numbers ending");
 

@@ -1,5 +1,7 @@
 #include <print>
 #include <functional>
+#include <thread>
+#include <chrono>
 
 #include "darkriver.hpp"
 
@@ -23,21 +25,13 @@ struct Health
         std::println("Constructor");
     }
 
-    Health(const Health &other) : health(other.health)
-    {
-        std::println("Copy Constructor");
-    }
+    Health(const Health &other) = delete;
     Health(Health &&other) noexcept : health(std::move(other.health))
     {
         std::println("Move Constructor");
     }
 
-    Health &operator=(const Health &other)
-    {
-        health = other.health;
-        std::println("Copy Assignment");
-        return *this;
-    }
+    Health &operator=(const Health &other) = delete;
 
     Health &operator=(Health &&other) noexcept
     {
@@ -47,11 +41,11 @@ struct Health
     }
 };
 
-generator<WaitAmountOfSeconds> generate_numbers(int i)
+generator<WaitAmountOfMilleSeconds> generate_numbers(World *world, int i)
 {
     std::println("generate_numbers starting");
-    co_yield WaitAmountOfSeconds{
-        .m_seconds = 1000.0f};
+    co_yield WaitAmountOfMilleSeconds{
+        10.0f};
     std::println("generate_numbers ending");
 
     std::println("i: {}", i);
@@ -141,9 +135,6 @@ int main()
     world.build_plugins();
     Entity e = world.add_entity(pos, vel);
     Entity e2 = world.add_entity(pos2, vel2);
-    // you could improve this by using std::move(health) instead of health
-    // because this way you avoid a copy
-    // try if you wish
     Entity e3 = world.add_entity(pos3, std::move(health));
 
     world.add_component_to_entity(e, Health{300});
@@ -163,7 +154,8 @@ int main()
     world.run();
     world.emit(Collision{.collided = true});
 
-    world.add_task(generate_numbers, 10);
+    // in case you need the world pass as pointer to has cohesion
+    world.add_task(generate_numbers, &world, 10);
 
     auto f = []()
     {
@@ -172,9 +164,12 @@ int main()
     p(f);
 
     std::println("Run");
+    int i = 0;
     while (true)
     {
-        world.run_tasks(0.16f);
+        world.run_tasks(1.0f);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::println("{}", i++);
     }
     return 0;
 }
