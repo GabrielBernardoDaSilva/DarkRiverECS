@@ -11,6 +11,7 @@
 #include "generator.hpp"
 #include "accessor.hpp"
 #include "entity_manager.hpp"
+#include "resources.hpp"
 
 #include <vector>
 #include <memory>
@@ -28,7 +29,8 @@ namespace darkriver
 
         ExecutorManager m_executor_manager{};
         TaskManager m_task_manager{};
-        EntityManager m_entity_manager;
+        EntityManager m_entity_manager{};
+        ResourceManager m_resource_manager{}; 
         EventManager m_event_manager{m_accessor};
 
     public:
@@ -194,6 +196,24 @@ namespace darkriver
         void resume_all_tasks();
 
         TaskManager &get_task_manager();
+#pragma endregion
+
+#pragma region resources
+        // resources
+        template <typename T>
+        void add_resource(T &&resource)
+        {
+            m_resource_manager.add(std::forward<T>(resource));
+        }
+
+        template <typename T>
+        Resource<T> get_resource()
+        {
+            return m_resource_manager.get<T>();
+        }
+
+        ResourceManager &get_resource_manager();
+
 #pragma endregion
 
         std::vector<Archetype> &create_archetype_ref();

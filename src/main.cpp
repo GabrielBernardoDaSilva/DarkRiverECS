@@ -16,6 +16,16 @@ struct Velocity
     float x, y;
 };
 
+struct Timer
+{
+    float time;
+};
+
+struct Game
+{
+    int score;
+};
+
 struct Health
 {
     int health;
@@ -63,10 +73,13 @@ void check_collision(World &world, Collision collision)
 }
 
 void modify_pos(Query<With<Entity &, Position &, Velocity &>> query, Query<With<Position &>, Without<Velocity &>> q2,
-                EventManager &event_manager, EntityManager &entity_manager)
+                EventManager &event_manager, EntityManager &entity_manager, ResourceManager &resource_manager)
 {
     entity_manager.add_entity(Position{.x = 200.0f, .y = 200.0f}, Velocity{.x = 200.0f, .y = 200.0f});
     event_manager.subscribe<Collision>(check_collision);
+
+    resource_manager.add<Game>({100});
+
     auto a = query.all();
     auto b = q2.all();
     for (auto &[entity, pos, vel] : a)
@@ -84,8 +97,10 @@ void modify_pos(Query<With<Entity &, Position &, Velocity &>> query, Query<With<
     }
 }
 
-void read_position(Query<With<Position &>> query)
+void read_position(Query<With<Position &>> query, const Resource<Timer> timer, Resource<Game> game)
 {
+    std::println("Timer: {}", timer->time);
+    game->score += 1;
     for (auto &[pos] : query.all())
     {
         std::println("Position: x: {} y: {}", pos.x, pos.y);
@@ -107,22 +122,15 @@ void p(std::function<void()> f)
     f();
 }
 
-struct Timer
-{
-    float time;
-};
-
 int main()
 {
 
-    Timer timer {0.0f};
+    // auto rm = ResourceManager{};
+    // rm.add(timer);
 
-    auto rm = ResourcesManager{};
-    rm.add(timer);
+    // auto t = rm.get<Timer>();
 
-    auto t = rm.get<Timer>();
-    
-    
+    // std::println("Timer: {}", t->time);
 
     Position pos = {
         .x = 10.0f,
@@ -146,6 +154,7 @@ int main()
         100};
 
     World world;
+    world.add_resource(Timer{10.0f});
     world.add_plugin<PluginTest>();
     world.build_plugins();
     world.add_entity(pos, vel);
@@ -155,8 +164,9 @@ int main()
     // world.add_component_to_entity(e, Health{300});
     // world.remove_component_from_entity<Health>(e);
 
-    auto pos_query = [](Query<With<Position &>> query)
+    auto pos_query = [](Query<With<Position &>> query, const Resource<Game> game)
     {
+        std::println("Game Score: {}", game->score);
         for (auto &[pos] : query.all())
         {
             std::println("Print Lambda Position: x: {} y: {}", pos.x, pos.y);
@@ -172,11 +182,6 @@ int main()
     // in case you need the world pass as pointer to has cohesion
     world.add_task(generate_numbers, &world, 10);
 
-    auto f = []()
-    {
-        std::println("Hello");
-    };
-    p(f);
 
     std::println("Run");
     int i = 0;

@@ -11,6 +11,7 @@ namespace darkriver
     class ExecutorManager;
     class TaskManager;
     class EntityManager;
+    class ResourceManager;
 
     class Accessor
     {
@@ -24,7 +25,9 @@ namespace darkriver
         [[nodiscard]] ExecutorManager &get_executor_manager() const;
         [[nodiscard]] TaskManager &get_task_manager() const;
         [[nodiscard]] EntityManager &get_entity_manager() const;
+        [[nodiscard]] ResourceManager &get_resource_manager() const;
         [[nodiscard]] World &get_world() const;
+
 
     private:
         World &m_world;

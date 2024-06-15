@@ -99,6 +99,11 @@ namespace darkriver
         return m_task_manager;
     }
 
+    ResourceManager &World::get_resource_manager()
+    {
+        return m_resource_manager;
+    }
+
     std::vector<Archetype> &World::create_archetype_ref()
     {
         return m_entity_manager.m_archetypes;

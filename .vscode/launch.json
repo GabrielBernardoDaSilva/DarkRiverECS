@@ -8,7 +8,7 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/WinterRainECS.exe",
+            "program": "${workspaceFolder}/build/Debug/DarkRiverECS.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

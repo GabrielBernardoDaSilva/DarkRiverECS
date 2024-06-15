@@ -3,6 +3,8 @@
 #include <print>
 #include <functional>
 
+#include "resources.hpp"
+
 namespace darkriver
 {
 #define FUNCTION_TRAITS(func) function_traits<decltype(&func)>(), #func
@@ -16,6 +18,22 @@ namespace darkriver
     class EventManager;
     class TaskManager;
     class ExecutorManager;
+
+    template <typename T>
+    struct remove_resource
+    {
+        using type = T;
+    };
+
+    // Specialization for Resource<T>
+    template <typename T>
+    struct remove_resource<Resource<T>>
+    {
+        using type = T;
+    };
+
+    template <typename T>
+    using remove_resource_t = typename remove_resource<T>::type;
 
     template <typename T>
     concept validation_query_types = std::is_reference_v<T>;

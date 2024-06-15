@@ -11,6 +11,7 @@
 #include <functional>
 #include <print>
 #include <type_traits>
+#include <exception>
 
 namespace darkriver
 {
@@ -19,6 +20,7 @@ namespace darkriver
     class EventManager;
     class TaskManager;
     class ExecutorManager;
+    class BaseResource;
 
     class ExecutorBase
     {
@@ -66,6 +68,8 @@ namespace darkriver
             constexpr bool is_task_manager = std::is_same_v<TaskManager, std::remove_reference_t<Arg>>;
             constexpr bool is_executor_manager = std::is_same_v<ExecutorManager, std::remove_reference_t<Arg>>;
             constexpr bool is_entity_manager = std::is_same_v<EntityManager, std::remove_reference_t<Arg>>;
+            constexpr bool is_resource = std::is_base_of_v<BaseResource, std::remove_const_t<std::remove_reference_t<Arg>>>;
+            constexpr bool is_resource_manager = std::is_same_v<ResourceManager, std::remove_reference_t<Arg>>;
             if constexpr (is_base_query)
                 return Arg{m_accessor};
             else if constexpr (is_event_manager)
@@ -76,7 +80,12 @@ namespace darkriver
                 return static_cast<Arg>(m_accessor.get_executor_manager());
             else if constexpr (is_entity_manager)
                 return static_cast<Arg>(m_accessor.get_entity_manager());
-            throw std::invalid_argument("Invalid argument type");
+            else if constexpr (is_resource)
+                return static_cast<Arg>(m_accessor.get_resource_manager().get<remove_resource_t<Arg>>());
+            else if constexpr (is_resource_manager)
+                return static_cast<Arg>(m_accessor.get_resource_manager());
+            else
+                throw std::invalid_argument("Invalid argument type");
         }
 
         void execute() override

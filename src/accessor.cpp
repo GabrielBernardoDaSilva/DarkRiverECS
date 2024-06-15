@@ -34,6 +34,11 @@ namespace darkriver
         return m_world.get_entity_manager();
     }
 
+    ResourceManager &Accessor::get_resource_manager() const
+    {
+        return m_world.get_resource_manager();
+    }
+
     World &Accessor::get_world() const
     {
         return m_world;
