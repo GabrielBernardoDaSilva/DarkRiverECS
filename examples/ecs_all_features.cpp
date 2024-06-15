@@ -125,12 +125,6 @@ void p(std::function<void()> f)
 int main()
 {
 
-    // auto rm = ResourceManager{};
-    // rm.add(timer);
-
-    // auto t = rm.get<Timer>();
-
-    // std::println("Timer: {}", t->time);
 
     Position pos = {
         .x = 10.0f,
@@ -157,12 +151,12 @@ int main()
     world.add_resource(Timer{10.0f});
     world.add_plugin<PluginTest>();
     world.build_plugins();
-    world.add_entity(pos, vel);
-    world.add_entity(pos2, vel2);
-    world.add_entity(pos3, std::move(health));
+    auto e = world.add_entity_ret_id(pos, vel);
+    world.add_entity(pos2, vel2)
+        .add_entity(pos3, std::move(health));
 
-    // world.add_component_to_entity(e, Health{300});
-    // world.remove_component_from_entity<Health>(e);
+    world.add_component_to_entity(e, Health{300});
+    world.remove_component_from_entity<Health>(e);
 
     auto pos_query = [](Query<With<Position &>> query, const Resource<Game> game)
     {
@@ -181,6 +175,11 @@ int main()
 
     // in case you need the world pass as pointer to has cohesion
     world.add_task(generate_numbers, &world, 10);
+
+    // accept lambda task
+    world.add_task([](int i) -> generator<WaitAmountOfSeconds>
+                   { std::println("Lambda Task");
+                    co_yield WaitAmountOfSeconds{10.0f}; }, 10);
 
     std::println("Run");
     int i = 0;

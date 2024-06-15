@@ -30,7 +30,7 @@ namespace darkriver
         ExecutorManager m_executor_manager{};
         TaskManager m_task_manager{};
         EntityManager m_entity_manager{};
-        ResourceManager m_resource_manager{}; 
+        ResourceManager m_resource_manager{};
         EventManager m_event_manager{m_accessor};
 
     public:
@@ -49,14 +49,20 @@ namespace darkriver
         EntityManager &get_entity_manager();
 
         template <typename... T>
-        World& add_entity(T&&... components)
+        World &add_entity(T &&...components)
         {
-            auto entity = m_entity_manager.add_entity(std::forward<T>(components)...);
+            m_entity_manager.add_entity(std::forward<T>(components)...);
             return *this;
         };
 
+        template <typename... T>
+        Entity add_entity_ret_id(T &&...components)
+        {
+            return m_entity_manager.add_entity(std::forward<T>(components)...);
+        };
+
         template <typename T>
-        std::expected<Success, ArchetypeError> add_component_to_entity(Entity entity, T&& component)
+        std::expected<Success, ArchetypeError> add_component_to_entity(Entity entity, T &&component)
         {
             return m_entity_manager.add_component_to_entity<T>(entity, std::move(component));
         }
@@ -75,21 +81,21 @@ namespace darkriver
         /// executors
 
         template <req_system_args... Args>
-        World& add_executor(ExecutorType executor_type, std::function<void(Args...)> system)
+        World &add_executor(ExecutorType executor_type, std::function<void(Args...)> system)
         {
             m_executor_manager.add_executor(executor_type, system, m_accessor);
             return *this;
         }
 
         template <req_system_args... Args>
-        World& add_executor(ExecutorType executor_type, void (*system)(Args...))
+        World &add_executor(ExecutorType executor_type, void (*system)(Args...))
         {
             m_executor_manager.add_executor(executor_type, system, m_accessor);
             return *this;
         }
 
         template <function_pointer Lambda>
-        World& add_executor(ExecutorType executor_type, Lambda &&lambda)
+        World &add_executor(ExecutorType executor_type, Lambda &&lambda)
         {
             std::function func{lambda};
             m_executor_manager.add_executor(executor_type, func, m_accessor);
@@ -97,7 +103,7 @@ namespace darkriver
         }
 
         template <function_pointer... Executors>
-        World& add_executors(ExecutorType execute_type, Executors &&...executors)
+        World &add_executors(ExecutorType execute_type, Executors &&...executors)
         {
             (add_executor(execute_type, executors), ...);
             return *this;
@@ -160,7 +166,7 @@ namespace darkriver
 #pragma region plugins
         // plugins
         template <req_plugin T>
-        World& add_plugin()
+        World &add_plugin()
         {
             m_plugins.push_back(std::make_unique<T>());
             return *this;
@@ -181,6 +187,13 @@ namespace darkriver
         TaskId add_task(generator<WaitAmountOfSeconds> (*task)(Args...), Args... args)
         {
             return m_task_manager.add_task(TaskScheduler(task, args...));
+        }
+
+        template <typename Lambda, typename... Args>
+        TaskId add_task(Lambda task, Args... args)
+        {
+            std::function func{task};
+            return m_task_manager.add_task(TaskScheduler(func, args...));
         }
 
         void run_tasks(float dt);
