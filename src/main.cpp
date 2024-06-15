@@ -182,7 +182,6 @@ int main()
     // in case you need the world pass as pointer to has cohesion
     world.add_task(generate_numbers, &world, 10);
 
-
     std::println("Run");
     int i = 0;
     while (true)
