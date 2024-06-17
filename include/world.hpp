@@ -214,9 +214,10 @@ namespace darkriver
 #pragma region resources
         // resources
         template <typename T>
-        void add_resource(T &&resource)
+        World& add_resource(T &&resource)
         {
             m_resource_manager.add(std::forward<T>(resource));
+            return *this;
         }
 
         template <typename T>
