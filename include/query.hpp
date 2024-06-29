@@ -53,6 +53,9 @@ namespace darkriver
 
         inline constexpr void execute() override
         {
+            if (m_result.size() > 0)
+                m_result.clear();
+
             for (Archetype &archetype : m_archetypes)
             {
                 auto &components = archetype.get_components();
