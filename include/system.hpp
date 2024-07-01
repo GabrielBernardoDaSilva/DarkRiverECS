@@ -24,6 +24,8 @@ namespace darkriver
 
     class ExecutorBase
     {
+        friend class ExecutorManager;
+
     public:
         ExecutorBase() = default;
         ExecutorBase(ExecutorBehaviour behaviour)
@@ -37,8 +39,20 @@ namespace darkriver
             return m_behaviour;
         }
 
+        const bool is_executed() const noexcept
+        {
+            return m_is_executed;
+        }
+
     private:
         ExecutorBehaviour m_behaviour{ExecutorBehaviour::Always};
+
+        void set_executed(bool is_executed) noexcept
+        {
+            m_is_executed = is_executed;
+        }
+
+        bool m_is_executed{false};
     };
 
     template <req_system_args... Args>
