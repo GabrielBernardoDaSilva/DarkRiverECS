@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <exception>
+#include <algorithm>
+#include <ranges>
 
 namespace darkriver
 {
@@ -29,6 +31,13 @@ namespace darkriver
             {
                 executor->execute();
             }
+
+            // remove once executors
+            auto result = std::ranges::remove_if(m_executors[ExecutorType::Update], [](const auto &executor) {
+                return executor->get_behaviour() == ExecutorBehaviour::Once;
+            });
+
+            m_executors[ExecutorType::Update].erase(result.begin(), result.end());
         }
         catch (const std::invalid_argument &e)
         {

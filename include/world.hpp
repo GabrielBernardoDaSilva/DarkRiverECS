@@ -81,21 +81,21 @@ namespace darkriver
         /// executors
 
         template <req_system_args... Args>
-        World &add_executor(ExecutorType executor_type, std::function<void(Args...)> system)
+        World &add_executor(ExecutorType executor_type, std::function<void(Args...)> system, ExecutorBehaviour behavior = ExecutorBehaviour::Always)
         {
             m_executor_manager.add_executor(executor_type, system, m_accessor);
             return *this;
         }
 
         template <req_system_args... Args>
-        World &add_executor(ExecutorType executor_type, void (*system)(Args...))
+        World &add_executor(ExecutorType executor_type, void (*system)(Args...), ExecutorBehaviour behavior = ExecutorBehaviour::Always)
         {
             m_executor_manager.add_executor(executor_type, system, m_accessor);
             return *this;
         }
 
         template <function_pointer Lambda>
-        World &add_executor(ExecutorType executor_type, Lambda &&lambda)
+        World &add_executor(ExecutorType executor_type, Lambda &&lambda, ExecutorBehaviour behavior = ExecutorBehaviour::Always)
         {
             std::function func{lambda};
             m_executor_manager.add_executor(executor_type, func, m_accessor);
@@ -214,7 +214,7 @@ namespace darkriver
 #pragma region resources
         // resources
         template <typename T>
-        World& add_resource(T &&resource)
+        World &add_resource(T &&resource)
         {
             m_resource_manager.add(std::forward<T>(resource));
             return *this;

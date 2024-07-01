@@ -9,4 +9,10 @@ namespace darkriver
 		End
 	};
 
+	enum class ExecutorBehaviour
+	{
+		Once,
+		Always
+	};
+
 }

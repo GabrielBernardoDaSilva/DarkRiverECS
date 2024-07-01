@@ -26,20 +26,32 @@ namespace darkriver
     {
     public:
         ExecutorBase() = default;
+        ExecutorBase(ExecutorBehaviour behaviour)
+            : m_behaviour(behaviour) {}
         virtual ~ExecutorBase() = default;
 
         virtual void execute() = 0;
+
+        const ExecutorBehaviour get_behaviour() const noexcept
+        {
+            return m_behaviour;
+        }
+
+    private:
+        ExecutorBehaviour m_behaviour{ExecutorBehaviour::Always};
     };
 
     template <req_system_args... Args>
     class Executor : public ExecutorBase
     {
     public:
-        Executor(std::function<void(Args...)> func, Accessor &accessor) : m_executor(func), m_accessor(accessor)
+        Executor(std::function<void(Args...)> func, Accessor &accessor, ExecutorBehaviour behaviour = ExecutorBehaviour::Always)
+            : ExecutorBase(behaviour), m_executor(func), m_accessor(accessor)
         {
         }
 
-        Executor(void (*func)(Args...), Accessor &accessor) : m_executor(func), m_accessor(accessor)
+        Executor(void (*func)(Args...), Accessor &accessor, ExecutorBehaviour behaviour = ExecutorBehaviour::Always)
+            : ExecutorBase(behaviour), m_executor(func), m_accessor(accessor)
         {
         }
 
@@ -116,13 +128,13 @@ namespace darkriver
         ~ExecutorManager() = default;
 
         template <typename... Args>
-        void add_executor(const ExecutorType executor_type, std::function<void(Args...)> func, Accessor &accessor)
+        void add_executor(const ExecutorType executor_type, std::function<void(Args...)> func, Accessor &accessor, ExecutorBehaviour behaviour = ExecutorBehaviour::Always)
         {
             m_executors[executor_type].push_back(std::make_unique<Executor<Args...>>(func, accessor));
         }
 
         template <typename... Args>
-        void add_executor(const ExecutorType executor_type, void (*func)(Args...), Accessor &accessor)
+        void add_executor(const ExecutorType executor_type, void (*func)(Args...), Accessor &accessor, ExecutorBehaviour behaviour = ExecutorBehaviour::Always)
         {
             m_executors[executor_type].push_back(std::make_unique<Executor<Args...>>(func, accessor));
         }
